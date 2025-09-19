@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>⚡ Neon Runner WOW - Ultra Fluid 60+ FPS | LIPA Studios</title>
+    <meta name="description" content="Play Neon Runner WOW, the most fluid endless runner! 60+ FPS, epic effects, mega combos. Ultra optimized HTML5 game by LIPA Studios.">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-633RQLC6T0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-633RQLC6T0');
+    </script>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4129506161314540" crossorigin="anonymous"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000 0%, #111 50%, #000 100%);
+            color: #00FFFF;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        #gameCanvas {
+            display: block;
+            background: linear-gradient(180deg, #000 0%, #111 50%, #000 100%);
+            cursor: pointer;
+            will-change: transform;
+        }
+        
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .score-display {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #00FFFF;
+            text-shadow: 0 0 10px #00FFFF;
+            will-change: transform;
+        }
+        
+        .combo-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #FF00FF;
+            text-shadow: 0 0 15px #FF00FF;
+            will-change: transform;
+        }
+        
+        .fps-display {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            font-size: 14px;
+            color: #00FF00;
+            font-family: monospace;
+        }
+        
+        .menu-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000 0%, #111 50%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+        
+        .game-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00FFFF;
+            text-shadow: 0 0 20px #00FFFF;
+            margin-bottom: 20px;
+            animation: titlePulse 2s infinite;
+        }
+        
+        .wow-subtitle {
+            font-size: 24px;
+            color: #FF00FF;
+            text-shadow: 0 0 15px #FF00FF;
+            margin-bottom: 40px;
+            animation: subtitleGlow 1.5s infinite alternate;
+        }
+        
+        .start-button {
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00FFFF, #FF00FF);
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px #00FFFF;
+            will-change: transform;
+        }
+        
+        .start-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #FF00FF;
+        }
+        
+        .game-over-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 30;
+        }
+        
+        .game-over-title {
+            font-size: 36px;
+            color: #FF0000;
+            text-shadow: 0 0 15px #FF0000;
+            margin-bottom: 20px;
+        }
+        
+        .final-score {
+            font-size: 24px;
+            color: #00FFFF;
+            margin-bottom: 30px;
+        }
+        
+        .restart-button {
+            padding: 12px 25px;
+            font-size: 18px;
+            background: linear-gradient(45deg, #FF00FF, #00FFFF);
+            color: #000;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* AdSense Banners */
+        .ad-banner {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00FFFF;
+            z-index: 5;
+        }
+        
+        .top-banner {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 50px;
+        }
+        
+        .bottom-banner {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 50px;
+        }
+        
+        .side-banner {
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 120px;
+            height: 600px;
+        }
+        
+        /* Animations */
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes subtitleGlow {
+            0% { text-shadow: 0 0 15px #FF00FF; }
+            100% { text-shadow: 0 0 25px #FF00FF, 0 0 35px #FF00FF; }
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes screenShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .screen-shake {
+            animation: screenShake 0.3s ease-in-out;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .game-title { font-size: 36px; }
+            .wow-subtitle { font-size: 18px; }
+            .start-button { padding: 12px 24px; font-size: 18px; }
+            .side-banner { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="ui-overlay">
+            <div class="score-display" id="scoreDisplay">SCORE: 0</div>
+            <div class="combo-display" id="comboDisplay">COMBO: 1x</div>
+            <div class="fps-display" id="fpsDisplay">FPS: 60</div>
+        </div>
+        
+        <div class="menu-screen" id="menuScreen">
+            <h1 class="game-title">⚡ NEON RUNNER WOW</h1>
+            <p class="wow-subtitle">Ultra Fluid 60+ FPS Experience</p>
+            <button class="start-button" onclick="startGame()">🚀 START RUNNING</button>
+        </div>
+        
+        <div class="game-over-screen" id="gameOverScreen">
+            <h2 class="game-over-title">GAME OVER</h2>
+            <div class="final-score" id="finalScore">SCORE: 0</div>
+            <button class="restart-button" onclick="restartGame()">🔄 PLAY AGAIN</button>
+        </div>
+        
+        <!-- AdSense Banners -->
+        <div class="ad-banner top-banner" id="topBanner" style="display: none;">
+            <ins class="adsbygoogle" style="display:block;width:320px;height:50px;" data-ad-client="ca-pub-4129506161314540" data-ad-slot="6673201053"></ins>
+        </div>
+        
+        <div class="ad-banner bottom-banner" id="bottomBanner" style="display: none;">
+            <ins class="adsbygoogle" style="display:block;width:320px;height:50px;" data-ad-client="ca-pub-4129506161314540" data-ad-slot="6673201053"></ins>
+        </div>
+        
+        <div class="ad-banner side-banner" id="sideBanner" style="display: none;">
+            <ins class="adsbygoogle" style="display:block;width:120px;height:600px;" data-ad-client="ca-pub-4129506161314540" data-ad-slot="6673201053"></ins>
+        </div>
+    </div>
+
+    <script>
+        // ===== ULTRA OPTIMIZED GAME ENGINE =====
+        class UltraOptimizedGame {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.gameState = {
+                    running: false,
+                    score: 0,
+                    combo: 1,
+                    speed: 4,
+                    fps: 60,
+                    lastTime: 0,
+                    deltaTime: 0
+                };
+                
+                this.runner = {
+                    x: 100,
+                    y: 300,
+                    width: 40,
+                    height: 60,
+                    velocityY: 0,
+                    onGround: true,
+                    dashCooldown: 0,
+                    invulnerable: 0
+                };
+                
+                this.obstacles = [];
+                this.particles = [];
+                this.powerUps = [];
+                this.gems = [];
+                
+                this.keys = {};
+                this.touch = { active: false, startY: 0 };
+                
+                this.setupCanvas();
+                this.setupEventListeners();
+                this.setupAdSense();
+                this.gameLoop();
+            }
+            
+            setupCanvas() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                
+                // Enable high DPI rendering
+                const dpr = window.devicePixelRatio || 1;
+                this.canvas.width *= dpr;
+                this.canvas.height *= dpr;
+                this.ctx.scale(dpr, dpr);
+                this.canvas.style.width = window.innerWidth + 'px';
+                this.canvas.style.height = window.innerHeight + 'px';
+            }
+            
+            setupEventListeners() {
+                // Keyboard
+                document.addEventListener('keydown', (e) => {
+                    this.keys[e.code] = true;
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.jump();
+                    }
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.code] = false;
+                });
+                
+                // Touch
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.touch.active = true;
+                    this.touch.startY = e.touches[0].clientY;
+                    this.jump();
+                });
+                
+                this.canvas.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.touch.active = false;
+                });
+                
+                // Mouse
+                this.canvas.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.jump();
+                });
+                
+                // Resize
+                window.addEventListener('resize', () => {
+                    this.setupCanvas();
+                });
+            }
+            
+            setupAdSense() {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } catch(e) {
+                    console.log('AdSense not loaded yet');
+                }
+            }
+            
+            jump() {
+                if (!this.gameState.running) return;
+                
+                if (this.runner.onGround) {
+                    this.runner.velocityY = -15;
+                    this.runner.onGround = false;
+                    this.createJumpParticles();
+                } else if (this.runner.dashCooldown <= 0) {
+                    // Dash ability
+                    this.runner.velocityY = -20;
+                    this.runner.dashCooldown = 60; // 1 second at 60fps
+                    this.createDashEffect();
+                    this.gameState.combo += 2;
+                }
+            }
+            
+            createJumpParticles() {
+                for (let i = 0; i < 8; i++) {
+                    this.particles.push({
+                        x: this.runner.x + this.runner.width / 2,
+                        y: this.runner.y + this.runner.height,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: Math.random() * 3,
+                        life: 30,
+                        maxLife: 30,
+                        color: `hsl(${180 + Math.random() * 60}, 100%, 50%)`
+                    });
+                }
+            }
+            
+            createDashEffect() {
+                // Screen flash effect
+                this.canvas.style.animation = 'screenShake 0.1s ease-in-out';
+                setTimeout(() => {
+                    this.canvas.style.animation = '';
+                }, 100);
+                
+                // Dash particles
+                for (let i = 0; i < 20; i++) {
+                    this.particles.push({
+                        x: this.runner.x + this.runner.width / 2,
+                        y: this.runner.y + this.runner.height / 2,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: (Math.random() - 0.5) * 8,
+                        life: 45,
+                        maxLife: 45,
+                        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+                    });
+                }
+            }
+            
+            update(deltaTime) {
+                if (!this.gameState.running) return;
+                
+                // Update runner
+                this.runner.velocityY += 0.8; // Gravity
+                this.runner.y += this.runner.velocityY;
+                
+                // Ground collision
+                if (this.runner.y >= this.canvas.height - this.runner.height - 50) {
+                    this.runner.y = this.canvas.height - this.runner.height - 50;
+                    this.runner.velocityY = 0;
+                    this.runner.onGround = true;
+                }
+                
+                // Update dash cooldown
+                if (this.runner.dashCooldown > 0) {
+                    this.runner.dashCooldown--;
+                }
+                
+                // Update invulnerability
+                if (this.runner.invulnerable > 0) {
+                    this.runner.invulnerable--;
+                }
+                
+                // Spawn obstacles
+                if (Math.random() < 0.02) {
+                    this.spawnObstacle();
+                }
+                
+                // Spawn power-ups
+                if (Math.random() < 0.005) {
+                    this.spawnPowerUp();
+                }
+                
+                // Spawn gems
+                if (Math.random() < 0.01) {
+                    this.spawnGem();
+                }
+                
+                // Update obstacles
+                this.obstacles.forEach((obstacle, index) => {
+                    obstacle.x -= this.gameState.speed;
+                    
+                    // Collision detection
+                    if (this.checkCollision(this.runner, obstacle)) {
+                        if (this.runner.invulnerable <= 0) {
+                            this.gameOver();
+                        }
+                    }
+                    
+                    // Remove off-screen obstacles
+                    if (obstacle.x < -obstacle.width) {
+                        this.obstacles.splice(index, 1);
+                        this.gameState.score += 10;
+                        this.gameState.combo += 1;
+                    }
+                });
+                
+                // Update power-ups
+                this.powerUps.forEach((powerUp, index) => {
+                    powerUp.x -= this.gameState.speed;
+                    powerUp.rotation += 0.1;
+                    
+                    if (this.checkCollision(this.runner, powerUp)) {
+                        this.collectPowerUp(powerUp);
+                        this.powerUps.splice(index, 1);
+                    }
+                    
+                    if (powerUp.x < -powerUp.width) {
+                        this.powerUps.splice(index, 1);
+                    }
+                });
+                
+                // Update gems
+                this.gems.forEach((gem, index) => {
+                    gem.x -= this.gameState.speed;
+                    gem.rotation += 0.15;
+                    
+                    if (this.checkCollision(this.runner, gem)) {
+                        this.collectGem(gem);
+                        this.gems.splice(index, 1);
+                    }
+                    
+                    if (gem.x < -gem.width) {
+                        this.gems.splice(index, 1);
+                    }
+                });
+                
+                // Update particles
+                this.particles.forEach((particle, index) => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    particle.life--;
+                    
+                    if (particle.life <= 0) {
+                        this.particles.splice(index, 1);
+                    }
+                });
+                
+                // Increase speed
+                this.gameState.speed += 0.001;
+                
+                // Update score
+                this.gameState.score += Math.floor(this.gameState.speed * this.gameState.combo);
+            }
+            
+            spawnObstacle() {
+                const types = ['normal', 'tall', 'wide', 'boss'];
+                const type = types[Math.floor(Math.random() * types.length)];
+                
+                let obstacle = {
+                    x: this.canvas.width,
+                    y: this.canvas.height - 50,
+                    width: 30,
+                    height: 30,
+                    type: type
+                };
+                
+                switch (type) {
+                    case 'tall':
+                        obstacle.height = 80;
+                        obstacle.y = this.canvas.height - obstacle.height - 50;
+                        break;
+                    case 'wide':
+                        obstacle.width = 60;
+                        break;
+                    case 'boss':
+                        obstacle.width = 100;
+                        obstacle.height = 100;
+                        obstacle.y = this.canvas.height - obstacle.height - 50;
+                        break;
+                }
+                
+                this.obstacles.push(obstacle);
+            }
+            
+            spawnPowerUp() {
+                const types = ['speed', 'jump', 'shield', 'magnet'];
+                const type = types[Math.floor(Math.random() * types.length)];
+                
+                this.powerUps.push({
+                    x: this.canvas.width,
+                    y: this.canvas.height - 100,
+                    width: 25,
+                    height: 25,
+                    type: type,
+                    rotation: 0
+                });
+            }
+            
+            spawnGem() {
+                this.gems.push({
+                    x: this.canvas.width,
+                    y: this.canvas.height - 80,
+                    width: 15,
+                    height: 15,
+                    rotation: 0,
+                    value: Math.floor(Math.random() * 5) + 1
+                });
+            }
+            
+            checkCollision(rect1, rect2) {
+                return rect1.x < rect2.x + rect2.width &&
+                       rect1.x + rect1.width > rect2.x &&
+                       rect1.y < rect2.y + rect2.height &&
+                       rect1.y + rect1.height > rect2.y;
+            }
+            
+            collectPowerUp(powerUp) {
+                switch (powerUp.type) {
+                    case 'speed':
+                        this.gameState.speed += 2;
+                        break;
+                    case 'jump':
+                        this.runner.velocityY = -20;
+                        break;
+                    case 'shield':
+                        this.runner.invulnerable = 180; // 3 seconds
+                        break;
+                    case 'magnet':
+                        // Attract nearby gems
+                        this.gems.forEach(gem => {
+                            const dx = this.runner.x - gem.x;
+                            const dy = this.runner.y - gem.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            if (distance < 100) {
+                                gem.x += dx * 0.1;
+                                gem.y += dy * 0.1;
+                            }
+                        });
+                        break;
+                }
+                
+                this.createPowerUpEffect(powerUp);
+            }
+            
+            collectGem(gem) {
+                this.gameState.score += gem.value * 100 * this.gameState.combo;
+                this.createGemEffect(gem);
+            }
+            
+            createPowerUpEffect(powerUp) {
+                for (let i = 0; i < 15; i++) {
+                    this.particles.push({
+                        x: powerUp.x + powerUp.width / 2,
+                        y: powerUp.y + powerUp.height / 2,
+                        vx: (Math.random() - 0.5) * 6,
+                        vy: (Math.random() - 0.5) * 6,
+                        life: 40,
+                        maxLife: 40,
+                        color: `hsl(${120 + Math.random() * 60}, 100%, 60%)`
+                    });
+                }
+            }
+            
+            createGemEffect(gem) {
+                for (let i = 0; i < 10; i++) {
+                    this.particles.push({
+                        x: gem.x + gem.width / 2,
+                        y: gem.y + gem.height / 2,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: (Math.random() - 0.5) * 4,
+                        life: 25,
+                        maxLife: 25,
+                        color: `hsl(${60 + Math.random() * 60}, 100%, 70%)`
+                    });
+                }
+            }
+            
+            render() {
+                // Clear canvas
+                this.ctx.fillStyle = '#000';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw background
+                this.drawBackground();
+                
+                // Draw ground
+                this.drawGround();
+                
+                // Draw obstacles
+                this.obstacles.forEach(obstacle => this.drawObstacle(obstacle));
+                
+                // Draw power-ups
+                this.powerUps.forEach(powerUp => this.drawPowerUp(powerUp));
+                
+                // Draw gems
+                this.gems.forEach(gem => this.drawGem(gem));
+                
+                // Draw runner
+                this.drawRunner();
+                
+                // Draw particles
+                this.particles.forEach(particle => this.drawParticle(particle));
+                
+                // Draw UI
+                this.drawUI();
+            }
+            
+            drawBackground() {
+                // Animated background
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                gradient.addColorStop(0, '#000');
+                gradient.addColorStop(0.5, '#111');
+                gradient.addColorStop(1, '#000');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Moving stars
+                this.ctx.fillStyle = '#00FFFF';
+                for (let i = 0; i < 50; i++) {
+                    const x = (i * 37) % this.canvas.width;
+                    const y = (i * 23) % this.canvas.height;
+                    const size = Math.sin(Date.now() * 0.001 + i) * 2 + 2;
+                    this.ctx.fillRect(x, y, size, size);
+                }
+            }
+            
+            drawGround() {
+                this.ctx.fillStyle = '#00FFFF';
+                this.ctx.fillRect(0, this.canvas.height - 50, this.canvas.width, 50);
+                
+                // Ground glow effect
+                const gradient = this.ctx.createLinearGradient(0, this.canvas.height - 50, 0, this.canvas.height);
+                gradient.addColorStop(0, 'rgba(0, 255, 255, 0.3)');
+                gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, this.canvas.height - 50, this.canvas.width, 20);
+            }
+            
+            drawRunner() {
+                this.ctx.save();
+                
+                // Runner glow effect
+                if (this.runner.invulnerable > 0) {
+                    this.ctx.shadowColor = '#FF00FF';
+                    this.ctx.shadowBlur = 20;
+                } else {
+                    this.ctx.shadowColor = '#00FFFF';
+                    this.ctx.shadowBlur = 10;
+                }
+                
+                // Runner body
+                this.ctx.fillStyle = '#00FFFF';
+                this.ctx.fillRect(this.runner.x, this.runner.y, this.runner.width, this.runner.height);
+                
+                // Runner eyes
+                this.ctx.fillStyle = '#FF00FF';
+                this.ctx.fillRect(this.runner.x + 10, this.runner.y + 10, 5, 5);
+                this.ctx.fillRect(this.runner.x + 25, this.runner.y + 10, 5, 5);
+                
+                this.ctx.restore();
+            }
+            
+            drawObstacle(obstacle) {
+                this.ctx.save();
+                
+                this.ctx.shadowColor = '#FF0000';
+                this.ctx.shadowBlur = 15;
+                this.ctx.fillStyle = '#FF0000';
+                this.ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                
+                this.ctx.restore();
+            }
+            
+            drawPowerUp(powerUp) {
+                this.ctx.save();
+                
+                this.ctx.translate(powerUp.x + powerUp.width / 2, powerUp.y + powerUp.height / 2);
+                this.ctx.rotate(powerUp.rotation);
+                
+                this.ctx.shadowColor = '#00FF00';
+                this.ctx.shadowBlur = 10;
+                this.ctx.fillStyle = '#00FF00';
+                this.ctx.fillRect(-powerUp.width / 2, -powerUp.height / 2, powerUp.width, powerUp.height);
+                
+                this.ctx.restore();
+            }
+            
+            drawGem(gem) {
+                this.ctx.save();
+                
+                this.ctx.translate(gem.x + gem.width / 2, gem.y + gem.height / 2);
+                this.ctx.rotate(gem.rotation);
+                
+                this.ctx.shadowColor = '#FFFF00';
+                this.ctx.shadowBlur = 8;
+                this.ctx.fillStyle = '#FFFF00';
+                this.ctx.fillRect(-gem.width / 2, -gem.height / 2, gem.width, gem.height);
+                
+                this.ctx.restore();
+            }
+            
+            drawParticle(particle) {
+                this.ctx.save();
+                
+                const alpha = particle.life / particle.maxLife;
+                this.ctx.globalAlpha = alpha;
+                this.ctx.fillStyle = particle.color;
+                this.ctx.fillRect(particle.x, particle.y, 3, 3);
+                
+                this.ctx.restore();
+            }
+            
+            drawUI() {
+                // Score
+                document.getElementById('scoreDisplay').textContent = `SCORE: ${this.gameState.score}`;
+                
+                // Combo
+                document.getElementById('comboDisplay').textContent = `COMBO: ${this.gameState.combo}x`;
+                
+                // FPS
+                document.getElementById('fpsDisplay').textContent = `FPS: ${this.gameState.fps}`;
+            }
+            
+            gameOver() {
+                this.gameState.running = false;
+                document.getElementById('finalScore').textContent = `SCORE: ${this.gameState.score}`;
+                document.getElementById('gameOverScreen').style.display = 'flex';
+                
+                // Track game over
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'game_over', {
+                        game_name: 'neon_runner_wow',
+                        score: this.gameState.score,
+                        combo: this.gameState.combo
+                    });
+                }
+            }
+            
+            gameLoop(currentTime = 0) {
+                // Calculate delta time
+                this.gameState.deltaTime = currentTime - this.gameState.lastTime;
+                this.gameState.lastTime = currentTime;
+                
+                // Calculate FPS
+                this.gameState.fps = Math.round(1000 / this.gameState.deltaTime);
+                
+                // Update game
+                this.update(this.gameState.deltaTime);
+                
+                // Render game
+                this.render();
+                
+                // Continue loop
+                requestAnimationFrame((time) => this.gameLoop(time));
+            }
+        }
+        
+        // ===== GAME FUNCTIONS =====
+        let game;
+        
+        function startGame() {
+            document.getElementById('menuScreen').style.display = 'none';
+            document.getElementById('gameOverScreen').style.display = 'none';
+            
+            game = new UltraOptimizedGame();
+            game.gameState.running = true;
+            
+            // Track game start
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'game_start', {
+                    game_name: 'neon_runner_wow'
+                });
+            }
+        }
+        
+        function restartGame() {
+            document.getElementById('gameOverScreen').style.display = 'none';
+            
+            if (game) {
+                game.gameState.running = true;
+                game.gameState.score = 0;
+                game.gameState.combo = 1;
+                game.gameState.speed = 4;
+                game.obstacles = [];
+                game.particles = [];
+                game.powerUps = [];
+                game.gems = [];
+                game.runner.y = 300;
+                game.runner.velocityY = 0;
+                game.runner.onGround = true;
+                game.runner.dashCooldown = 0;
+                game.runner.invulnerable = 0;
+            }
+            
+            // Track restart
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'game_restart', {
+                    game_name: 'neon_runner_wow'
+                });
+            }
+        }
+        
+        // ===== AD MANAGEMENT =====
+        function showAds() {
+            document.getElementById('topBanner').style.display = 'block';
+            document.getElementById('bottomBanner').style.display = 'block';
+            document.getElementById('sideBanner').style.display = 'block';
+        }
+        
+        function hideAds() {
+            document.getElementById('topBanner').style.display = 'none';
+            document.getElementById('bottomBanner').style.display = 'none';
+            document.getElementById('sideBanner').style.display = 'none';
+        }
+        
+        // ===== INITIALIZATION =====
+        window.addEventListener('load', () => {
+            // Initialize game
+            game = new UltraOptimizedGame();
+            
+            // Track page view
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    game_name: 'neon_runner_wow'
+                });
+            }
+            
+            // Initialize AdSense
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {
+                console.log('AdSense not loaded yet');
+            }
+        });
+    </script>
+</body>
+</html>
