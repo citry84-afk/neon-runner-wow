@@ -381,7 +381,7 @@
                 
                 // Update runner position for mobile
                 this.runner.x = Math.min(100, vw * 0.2);
-                this.runner.y = vh - 80 - this.runner.height; // Posición sobre el suelo
+                this.runner.y = vh - 100 - this.runner.height; // Posición sobre el suelo
                 
                 // Ensure runner is visible
                 console.log(`Runner initialized: x=${this.runner.x}, y=${this.runner.y}, canvas: ${vw}x${vh}`);
@@ -504,7 +504,7 @@
                 this.runner.y += this.runner.velocityY;
                 
                 // Ground collision - ARREGLADO
-                const groundY = this.canvas.height - 80; // Altura del suelo
+                const groundY = this.canvas.height - 100; // Altura del suelo
                 if (this.runner.y >= groundY - this.runner.height) {
                     this.runner.y = groundY - this.runner.height;
                     this.runner.velocityY = 0;
@@ -609,7 +609,7 @@
                 
                 let obstacle = {
                     x: this.canvas.width,
-                    y: this.canvas.height - 80, // Sobre el suelo
+                    y: this.canvas.height - 100, // Sobre el suelo
                     width: 30,
                     height: 30,
                     type: type
@@ -618,7 +618,7 @@
                 switch (type) {
                     case 'tall':
                         obstacle.height = 60;
-                        obstacle.y = this.canvas.height - 80 - obstacle.height;
+                        obstacle.y = this.canvas.height - 100 - obstacle.height;
                         break;
                     case 'wide':
                         obstacle.width = 60;
@@ -626,7 +626,7 @@
                     case 'boss':
                         obstacle.width = 100;
                         obstacle.height = 80;
-                        obstacle.y = this.canvas.height - 80 - obstacle.height;
+                        obstacle.y = this.canvas.height - 100 - obstacle.height;
                         break;
                 }
                 
@@ -639,7 +639,7 @@
                 
                 this.powerUps.push({
                     x: this.canvas.width,
-                    y: this.canvas.height - 100,
+                    y: this.canvas.height - 120,
                     width: 25,
                     height: 25,
                     type: type,
@@ -650,7 +650,7 @@
             spawnGem() {
                 this.gems.push({
                     x: this.canvas.width,
-                    y: this.canvas.height - 80,
+                    y: this.canvas.height - 120,
                     width: 15,
                     height: 15,
                     rotation: 0,
@@ -783,26 +783,31 @@
             }
             
             drawGround() {
-                // Ground base
+                // Ground base - MUY VISIBLE
                 this.ctx.fillStyle = '#00FFFF';
-                this.ctx.fillRect(0, this.canvas.height - 80, this.canvas.width, 80);
+                this.ctx.fillRect(0, this.canvas.height - 100, this.canvas.width, 100);
                 
                 // Ground glow effect
-                const gradient = this.ctx.createLinearGradient(0, this.canvas.height - 80, 0, this.canvas.height);
-                gradient.addColorStop(0, 'rgba(0, 255, 255, 0.5)');
+                const gradient = this.ctx.createLinearGradient(0, this.canvas.height - 100, 0, this.canvas.height);
+                gradient.addColorStop(0, 'rgba(0, 255, 255, 0.8)');
                 gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
                 this.ctx.fillStyle = gradient;
-                this.ctx.fillRect(0, this.canvas.height - 80, this.canvas.width, 30);
+                this.ctx.fillRect(0, this.canvas.height - 100, this.canvas.width, 40);
                 
-                // Ground lines
+                // Ground lines - MÁS VISIBLES
                 this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 2;
+                this.ctx.lineWidth = 3;
                 for (let i = 0; i < this.canvas.width; i += 40) {
                     this.ctx.beginPath();
-                    this.ctx.moveTo(i, this.canvas.height - 80);
-                    this.ctx.lineTo(i + 20, this.canvas.height - 60);
+                    this.ctx.moveTo(i, this.canvas.height - 100);
+                    this.ctx.lineTo(i + 20, this.canvas.height - 80);
                     this.ctx.stroke();
                 }
+                
+                // Debug: Ground position
+                this.ctx.fillStyle = '#FF0000';
+                this.ctx.font = '16px Arial';
+                this.ctx.fillText(`Ground: ${this.canvas.height - 100}`, 10, this.canvas.height - 20);
             }
             
             drawRunner() {
@@ -965,7 +970,7 @@
             if (game) {
                 game.gameState.running = true;
                 game.runner.x = Math.min(100, window.innerWidth * 0.2);
-                game.runner.y = window.innerHeight - 80 - game.runner.height; // Sobre el suelo
+                game.runner.y = window.innerHeight - 100 - game.runner.height; // Sobre el suelo
                 game.runner.velocityY = 0;
                 game.runner.onGround = true;
                 console.log('Game restarted, runner position reset');
@@ -995,7 +1000,7 @@
                 game.powerUps = [];
                 game.gems = [];
                 game.runner.x = Math.min(100, window.innerWidth * 0.2);
-                game.runner.y = window.innerHeight - 80 - game.runner.height; // Sobre el suelo
+                game.runner.y = window.innerHeight - 100 - game.runner.height; // Sobre el suelo
                 game.runner.velocityY = 0;
                 game.runner.onGround = true;
                 game.runner.dashCooldown = 0;
