@@ -340,8 +340,8 @@
                 this.runner = {
                     x: 100,
                     y: 300,
-                    width: 40,
-                    height: 60,
+                    width: 50,
+                    height: 70,
                     velocityY: 0,
                     onGround: true,
                     dashCooldown: 0,
@@ -382,6 +382,9 @@
                 // Update runner position for mobile
                 this.runner.x = Math.min(100, vw * 0.2);
                 this.runner.y = vh - this.runner.height - 50;
+                
+                // Ensure runner is visible
+                console.log(`Runner initialized: x=${this.runner.x}, y=${this.runner.y}, canvas: ${vw}x${vh}`);
                 
                 console.log(`Canvas setup: ${vw}x${vh}, DPR: ${dpr}`);
             }
@@ -742,7 +745,7 @@
                 // Draw gems
                 this.gems.forEach(gem => this.drawGem(gem));
                 
-                // Draw runner
+                // Draw runner - ALWAYS DRAW
                 this.drawRunner();
                 
                 // Draw particles
@@ -750,6 +753,13 @@
                 
                 // Draw UI
                 this.drawUI();
+                
+                // Debug info
+                if (this.gameState.running) {
+                    this.ctx.fillStyle = '#FFFFFF';
+                    this.ctx.font = '12px Arial';
+                    this.ctx.fillText(`Runner: ${this.runner.x},${this.runner.y}`, 10, this.canvas.height - 20);
+                }
             }
             
             drawBackground() {
@@ -786,37 +796,45 @@
             drawRunner() {
                 this.ctx.save();
                 
+                // Debug: Log runner position
+                console.log(`Runner position: x=${this.runner.x}, y=${this.runner.y}, w=${this.runner.width}, h=${this.runner.height}`);
+                
                 // Runner glow effect
                 if (this.runner.invulnerable > 0) {
                     this.ctx.shadowColor = '#FF00FF';
                     this.ctx.shadowBlur = 20;
                 } else {
                     this.ctx.shadowColor = '#00FFFF';
-                    this.ctx.shadowBlur = 10;
+                    this.ctx.shadowBlur = 15;
                 }
                 
-                // Runner body - más visible
+                // Runner body - MUY VISIBLE
                 this.ctx.fillStyle = '#00FFFF';
                 this.ctx.fillRect(this.runner.x, this.runner.y, this.runner.width, this.runner.height);
                 
-                // Runner head
+                // Runner head - más grande
                 this.ctx.fillStyle = '#00CCFF';
-                this.ctx.fillRect(this.runner.x + 5, this.runner.y, this.runner.width - 10, 20);
+                this.ctx.fillRect(this.runner.x + 2, this.runner.y, this.runner.width - 4, 25);
                 
-                // Runner eyes - más grandes y visibles
+                // Runner eyes - MUY GRANDES
                 this.ctx.fillStyle = '#FF00FF';
-                this.ctx.fillRect(this.runner.x + 8, this.runner.y + 5, 6, 6);
-                this.ctx.fillRect(this.runner.x + 26, this.runner.y + 5, 6, 6);
+                this.ctx.fillRect(this.runner.x + 6, this.runner.y + 6, 8, 8);
+                this.ctx.fillRect(this.runner.x + 26, this.runner.y + 6, 8, 8);
                 
                 // Runner body details
                 this.ctx.fillStyle = '#0088FF';
-                this.ctx.fillRect(this.runner.x + 10, this.runner.y + 20, this.runner.width - 20, this.runner.height - 20);
+                this.ctx.fillRect(this.runner.x + 8, this.runner.y + 25, this.runner.width - 16, this.runner.height - 25);
                 
                 // Runner legs - animación de correr
-                const legOffset = Math.sin(Date.now() * 0.01) * 3;
+                const legOffset = Math.sin(Date.now() * 0.01) * 4;
                 this.ctx.fillStyle = '#00FFFF';
-                this.ctx.fillRect(this.runner.x + 5, this.runner.y + this.runner.height - 10, 8, 10 + legOffset);
-                this.ctx.fillRect(this.runner.x + 27, this.runner.y + this.runner.height - 10, 8, 10 - legOffset);
+                this.ctx.fillRect(this.runner.x + 4, this.runner.y + this.runner.height - 15, 10, 15 + legOffset);
+                this.ctx.fillRect(this.runner.x + 26, this.runner.y + this.runner.height - 15, 10, 15 - legOffset);
+                
+                // Debug border
+                this.ctx.strokeStyle = '#FF0000';
+                this.ctx.lineWidth = 2;
+                this.ctx.strokeRect(this.runner.x, this.runner.y, this.runner.width, this.runner.height);
                 
                 this.ctx.restore();
             }
@@ -931,8 +949,18 @@
             // Hide ads during gameplay
             hideAds();
             
-            game = new UltraOptimizedGame();
-            game.gameState.running = true;
+            // Reinitialize game
+            if (game) {
+                game.gameState.running = true;
+                game.runner.x = Math.min(100, window.innerWidth * 0.2);
+                game.runner.y = window.innerHeight - game.runner.height - 50;
+                game.runner.velocityY = 0;
+                game.runner.onGround = true;
+                console.log('Game restarted, runner position reset');
+            } else {
+                game = new UltraOptimizedGame();
+                game.gameState.running = true;
+            }
             
             // Track game start
             if (typeof gtag !== 'undefined') {
