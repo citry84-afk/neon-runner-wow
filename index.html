@@ -818,6 +818,9 @@
                 document.getElementById('finalScore').textContent = `SCORE: ${this.gameState.score}`;
                 document.getElementById('gameOverScreen').style.display = 'flex';
                 
+                // Show ads on game over
+                showAds();
+                
                 // Track game over
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'game_over', {
@@ -853,6 +856,9 @@
         function startGame() {
             document.getElementById('menuScreen').style.display = 'none';
             document.getElementById('gameOverScreen').style.display = 'none';
+            
+            // Hide ads during gameplay
+            hideAds();
             
             game = new UltraOptimizedGame();
             game.gameState.running = true;
@@ -909,6 +915,9 @@
         window.addEventListener('load', () => {
             // Initialize game
             game = new UltraOptimizedGame();
+            
+            // Show ads in menu
+            showAds();
             
             // Track page view
             if (typeof gtag !== 'undefined') {
