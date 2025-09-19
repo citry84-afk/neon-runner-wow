@@ -379,9 +379,10 @@
                 this.canvas.style.width = vw + 'px';
                 this.canvas.style.height = vh + 'px';
                 
-                // Update runner position for mobile
+                // Update runner position for mobile - DINÁMICO
                 this.runner.x = Math.min(100, vw * 0.2);
-                this.runner.y = vh - 100 - this.runner.height; // Posición sobre el suelo
+                const groundHeight = Math.max(60, vh * 0.15);
+                this.runner.y = vh - groundHeight - this.runner.height; // Posición sobre el suelo
                 
                 // Ensure runner is visible
                 console.log(`Runner initialized: x=${this.runner.x}, y=${this.runner.y}, canvas: ${vw}x${vh}`);
@@ -503,8 +504,9 @@
                 this.runner.velocityY += 0.8; // Gravity
                 this.runner.y += this.runner.velocityY;
                 
-                // Ground collision - ARREGLADO
-                const groundY = this.canvas.height - 100; // Altura del suelo
+                // Ground collision - DINÁMICO
+                const groundHeight = Math.max(60, this.canvas.height * 0.15);
+                const groundY = this.canvas.height - groundHeight;
                 if (this.runner.y >= groundY - this.runner.height) {
                     this.runner.y = groundY - this.runner.height;
                     this.runner.velocityY = 0;
@@ -607,9 +609,12 @@
                 const types = ['normal', 'tall', 'wide', 'boss'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
+                const groundHeight = Math.max(60, this.canvas.height * 0.15);
+                const groundY = this.canvas.height - groundHeight;
+                
                 let obstacle = {
                     x: this.canvas.width,
-                    y: this.canvas.height - 100, // Sobre el suelo
+                    y: groundY, // Sobre el suelo dinámico
                     width: 30,
                     height: 30,
                     type: type
@@ -617,16 +622,16 @@
                 
                 switch (type) {
                     case 'tall':
-                        obstacle.height = 60;
-                        obstacle.y = this.canvas.height - 100 - obstacle.height;
+                        obstacle.height = groundHeight * 0.6;
+                        obstacle.y = groundY - obstacle.height;
                         break;
                     case 'wide':
                         obstacle.width = 60;
                         break;
                     case 'boss':
                         obstacle.width = 100;
-                        obstacle.height = 80;
-                        obstacle.y = this.canvas.height - 100 - obstacle.height;
+                        obstacle.height = groundHeight * 0.8;
+                        obstacle.y = groundY - obstacle.height;
                         break;
                 }
                 
@@ -637,9 +642,12 @@
                 const types = ['speed', 'jump', 'shield', 'magnet'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
+                const groundHeight = Math.max(60, this.canvas.height * 0.15);
+                const groundY = this.canvas.height - groundHeight;
+                
                 this.powerUps.push({
                     x: this.canvas.width,
-                    y: this.canvas.height - 120,
+                    y: groundY - 20, // Sobre el suelo
                     width: 25,
                     height: 25,
                     type: type,
@@ -648,9 +656,12 @@
             }
             
             spawnGem() {
+                const groundHeight = Math.max(60, this.canvas.height * 0.15);
+                const groundY = this.canvas.height - groundHeight;
+                
                 this.gems.push({
                     x: this.canvas.width,
-                    y: this.canvas.height - 120,
+                    y: groundY - 20, // Sobre el suelo
                     width: 15,
                     height: 15,
                     rotation: 0,
@@ -783,31 +794,39 @@
             }
             
             drawGround() {
+                // Ground height as percentage of screen
+                const groundHeight = Math.max(60, this.canvas.height * 0.15); // 15% of screen height, min 60px
+                const groundY = this.canvas.height - groundHeight;
+                
                 // Ground base - MUY VISIBLE
                 this.ctx.fillStyle = '#00FFFF';
-                this.ctx.fillRect(0, this.canvas.height - 100, this.canvas.width, 100);
+                this.ctx.fillRect(0, groundY, this.canvas.width, groundHeight);
                 
                 // Ground glow effect
-                const gradient = this.ctx.createLinearGradient(0, this.canvas.height - 100, 0, this.canvas.height);
+                const gradient = this.ctx.createLinearGradient(0, groundY, 0, this.canvas.height);
                 gradient.addColorStop(0, 'rgba(0, 255, 255, 0.8)');
                 gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
                 this.ctx.fillStyle = gradient;
-                this.ctx.fillRect(0, this.canvas.height - 100, this.canvas.width, 40);
+                this.ctx.fillRect(0, groundY, this.canvas.width, groundHeight * 0.4);
                 
                 // Ground lines - MÁS VISIBLES
                 this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 3;
-                for (let i = 0; i < this.canvas.width; i += 40) {
+                this.ctx.lineWidth = Math.max(2, this.canvas.width / 200); // Responsive line width
+                const lineSpacing = Math.max(30, this.canvas.width / 20); // Responsive spacing
+                for (let i = 0; i < this.canvas.width; i += lineSpacing) {
                     this.ctx.beginPath();
-                    this.ctx.moveTo(i, this.canvas.height - 100);
-                    this.ctx.lineTo(i + 20, this.canvas.height - 80);
+                    this.ctx.moveTo(i, groundY);
+                    this.ctx.lineTo(i + lineSpacing/2, groundY + groundHeight * 0.2);
                     this.ctx.stroke();
                 }
                 
                 // Debug: Ground position
                 this.ctx.fillStyle = '#FF0000';
-                this.ctx.font = '16px Arial';
-                this.ctx.fillText(`Ground: ${this.canvas.height - 100}`, 10, this.canvas.height - 20);
+                this.ctx.font = `${Math.max(12, this.canvas.width / 50)}px Arial`;
+                this.ctx.fillText(`Ground: ${groundY.toFixed(0)} (${groundHeight.toFixed(0)}px)`, 10, this.canvas.height - 10);
+                
+                // Store ground position for physics
+                this.groundY = groundY;
             }
             
             drawRunner() {
@@ -970,7 +989,8 @@
             if (game) {
                 game.gameState.running = true;
                 game.runner.x = Math.min(100, window.innerWidth * 0.2);
-                game.runner.y = window.innerHeight - 100 - game.runner.height; // Sobre el suelo
+                const groundHeight = Math.max(60, window.innerHeight * 0.15);
+                game.runner.y = window.innerHeight - groundHeight - game.runner.height; // Sobre el suelo
                 game.runner.velocityY = 0;
                 game.runner.onGround = true;
                 console.log('Game restarted, runner position reset');
@@ -1000,7 +1020,8 @@
                 game.powerUps = [];
                 game.gems = [];
                 game.runner.x = Math.min(100, window.innerWidth * 0.2);
-                game.runner.y = window.innerHeight - 100 - game.runner.height; // Sobre el suelo
+                const groundHeight = Math.max(60, window.innerHeight * 0.15);
+                game.runner.y = window.innerHeight - groundHeight - game.runner.height; // Sobre el suelo
                 game.runner.velocityY = 0;
                 game.runner.onGround = true;
                 game.runner.dashCooldown = 0;
