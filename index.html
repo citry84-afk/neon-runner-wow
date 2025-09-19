@@ -793,29 +793,46 @@
                 const groundY = this.canvas.height / 2; // MITAD DE LA PANTALLA
                 const groundHeight = 100; // ALTURA FIJA
                 
-                // Suelo base - ROJO BRILLANTE (IMPOSIBLE NO VERLO)
-                this.ctx.fillStyle = '#FF0000';
+                // Suelo base - CYAN NEON (MEJOR VISUAL)
+                this.ctx.fillStyle = '#00FFFF';
+                this.ctx.fillRect(0, groundY, this.canvas.width, groundHeight);
+                
+                // Efecto de gradiente para más profundidad
+                const gradient = this.ctx.createLinearGradient(0, groundY, 0, groundY + groundHeight);
+                gradient.addColorStop(0, 'rgba(0, 255, 255, 0.8)');
+                gradient.addColorStop(1, 'rgba(0, 255, 255, 0.3)');
+                this.ctx.fillStyle = gradient;
                 this.ctx.fillRect(0, groundY, this.canvas.width, groundHeight);
                 
                 // Borde del suelo - BLANCO GRUESO
                 this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 5;
+                this.ctx.lineWidth = 3;
                 this.ctx.strokeRect(0, groundY, this.canvas.width, groundHeight);
                 
-                // Líneas del suelo - MÁS VISIBLES
+                // Líneas del suelo - PATRÓN NEON
                 this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 3;
-                for (let i = 0; i < this.canvas.width; i += 40) {
+                this.ctx.lineWidth = 2;
+                for (let i = 0; i < this.canvas.width; i += 30) {
                     this.ctx.beginPath();
                     this.ctx.moveTo(i, groundY);
-                    this.ctx.lineTo(i + 20, groundY + 50);
+                    this.ctx.lineTo(i + 15, groundY + 30);
                     this.ctx.stroke();
                 }
                 
-                // Debug info - MÁS GRANDE
-                this.ctx.fillStyle = '#FFFFFF';
-                this.ctx.font = '24px Arial';
-                this.ctx.fillText(`SUELO ROJO EN MITAD: ${groundY}`, 10, groundY - 10);
+                // Líneas horizontales para más detalle
+                this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                this.ctx.lineWidth = 1;
+                for (let i = 1; i < 3; i++) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, groundY + (groundHeight / 3) * i);
+                    this.ctx.lineTo(this.canvas.width, groundY + (groundHeight / 3) * i);
+                    this.ctx.stroke();
+                }
+                
+                // Debug info - OCULTO
+                // this.ctx.fillStyle = '#FFFFFF';
+                // this.ctx.font = '24px Arial';
+                // this.ctx.fillText(`SUELO ROJO EN MITAD: ${groundY}`, 10, groundY - 10);
                 
                 // Guardar posición para física
                 this.groundY = groundY;
