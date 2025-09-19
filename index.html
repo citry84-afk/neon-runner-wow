@@ -18,6 +18,9 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4129506161314540" crossorigin="anonymous"></script>
     
+    <!-- Google Search Console -->
+    <meta name="google-site-verification" content="iyEAsCuQ7tncHUvc1e09D9gDHOt0nzPQByhGu1xzq54" />
+    
     <style>
         * {
             margin: 0;
@@ -247,6 +250,38 @@
             .wow-subtitle { font-size: 18px; }
             .start-button { padding: 12px 24px; font-size: 18px; }
             .side-banner { display: none; }
+            
+            /* Mobile game area */
+            #gameCanvas {
+                touch-action: manipulation;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+            
+            /* Mobile UI */
+            .score-display { font-size: 20px; top: 10px; left: 10px; }
+            .combo-display { font-size: 18px; top: 10px; right: 10px; }
+            .fps-display { font-size: 12px; top: 40px; left: 10px; }
+            
+            /* Mobile buttons */
+            .start-button, .restart-button {
+                padding: 15px 25px;
+                font-size: 18px;
+                min-height: 50px;
+            }
+        }
+        
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .game-title { font-size: 28px; }
+            .wow-subtitle { font-size: 16px; }
+            .score-display { font-size: 18px; }
+            .combo-display { font-size: 16px; }
+            .start-button, .restart-button {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -328,16 +363,27 @@
             }
             
             setupCanvas() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
+                // Get viewport dimensions
+                const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+                const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+                
+                // Set canvas size
+                this.canvas.width = vw;
+                this.canvas.height = vh;
                 
                 // Enable high DPI rendering
                 const dpr = window.devicePixelRatio || 1;
-                this.canvas.width *= dpr;
-                this.canvas.height *= dpr;
+                this.canvas.width = vw * dpr;
+                this.canvas.height = vh * dpr;
                 this.ctx.scale(dpr, dpr);
-                this.canvas.style.width = window.innerWidth + 'px';
-                this.canvas.style.height = window.innerHeight + 'px';
+                this.canvas.style.width = vw + 'px';
+                this.canvas.style.height = vh + 'px';
+                
+                // Update runner position for mobile
+                this.runner.x = Math.min(100, vw * 0.2);
+                this.runner.y = vh - this.runner.height - 50;
+                
+                console.log(`Canvas setup: ${vw}x${vh}, DPR: ${dpr}`);
             }
             
             setupEventListeners() {
@@ -354,18 +400,27 @@
                     this.keys[e.code] = false;
                 });
                 
-                // Touch
+                // Touch - mejorado para móvil
                 this.canvas.addEventListener('touchstart', (e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     this.touch.active = true;
                     this.touch.startY = e.touches[0].clientY;
                     this.jump();
-                });
+                    console.log('Touch start - Jump!');
+                }, { passive: false });
                 
                 this.canvas.addEventListener('touchend', (e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     this.touch.active = false;
-                });
+                }, { passive: false });
+                
+                // Touch cancel
+                this.canvas.addEventListener('touchcancel', (e) => {
+                    e.preventDefault();
+                    this.touch.active = false;
+                }, { passive: false });
                 
                 // Mouse
                 this.canvas.addEventListener('click', (e) => {
@@ -740,14 +795,28 @@
                     this.ctx.shadowBlur = 10;
                 }
                 
-                // Runner body
+                // Runner body - más visible
                 this.ctx.fillStyle = '#00FFFF';
                 this.ctx.fillRect(this.runner.x, this.runner.y, this.runner.width, this.runner.height);
                 
-                // Runner eyes
+                // Runner head
+                this.ctx.fillStyle = '#00CCFF';
+                this.ctx.fillRect(this.runner.x + 5, this.runner.y, this.runner.width - 10, 20);
+                
+                // Runner eyes - más grandes y visibles
                 this.ctx.fillStyle = '#FF00FF';
-                this.ctx.fillRect(this.runner.x + 10, this.runner.y + 10, 5, 5);
-                this.ctx.fillRect(this.runner.x + 25, this.runner.y + 10, 5, 5);
+                this.ctx.fillRect(this.runner.x + 8, this.runner.y + 5, 6, 6);
+                this.ctx.fillRect(this.runner.x + 26, this.runner.y + 5, 6, 6);
+                
+                // Runner body details
+                this.ctx.fillStyle = '#0088FF';
+                this.ctx.fillRect(this.runner.x + 10, this.runner.y + 20, this.runner.width - 20, this.runner.height - 20);
+                
+                // Runner legs - animación de correr
+                const legOffset = Math.sin(Date.now() * 0.01) * 3;
+                this.ctx.fillStyle = '#00FFFF';
+                this.ctx.fillRect(this.runner.x + 5, this.runner.y + this.runner.height - 10, 8, 10 + legOffset);
+                this.ctx.fillRect(this.runner.x + 27, this.runner.y + this.runner.height - 10, 8, 10 - legOffset);
                 
                 this.ctx.restore();
             }
@@ -836,8 +905,10 @@
                 this.gameState.deltaTime = currentTime - this.gameState.lastTime;
                 this.gameState.lastTime = currentTime;
                 
-                // Calculate FPS
-                this.gameState.fps = Math.round(1000 / this.gameState.deltaTime);
+                // Calculate FPS (con límite para evitar valores extremos)
+                if (this.gameState.deltaTime > 0) {
+                    this.gameState.fps = Math.min(120, Math.round(1000 / this.gameState.deltaTime));
+                }
                 
                 // Update game
                 this.update(this.gameState.deltaTime);
@@ -913,6 +984,8 @@
         
         // ===== INITIALIZATION =====
         window.addEventListener('load', () => {
+            console.log('🚀 Initializing Neon Runner WOW...');
+            
             // Initialize game
             game = new UltraOptimizedGame();
             
@@ -931,6 +1004,15 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
             } catch(e) {
                 console.log('AdSense not loaded yet');
+            }
+            
+            console.log('✅ Neon Runner WOW initialized successfully!');
+        });
+        
+        // Handle resize
+        window.addEventListener('resize', () => {
+            if (game) {
+                game.setupCanvas();
             }
         });
     </script>
