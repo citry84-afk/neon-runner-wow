@@ -343,9 +343,12 @@
                     width: 50,
                     height: 70,
                     velocityY: 0,
+                    velocityX: 0, // Nueva: velocidad horizontal
                     onGround: true,
                     dashCooldown: 0,
-                    invulnerable: 0
+                    invulnerable: 0,
+                    maxSpeed: 8, // Nueva: velocidad máxima horizontal
+                    friction: 0.8 // Nueva: fricción para frenar
                 };
                 
                 this.obstacles = [];
@@ -396,6 +399,12 @@
                     if (e.code === 'Space') {
                         e.preventDefault();
                         this.jump();
+                    } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+                        e.preventDefault();
+                        this.moveLeft();
+                    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+                        e.preventDefault();
+                        this.moveRight();
                     }
                 });
                 
@@ -417,6 +426,24 @@
                     e.preventDefault();
                     e.stopPropagation();
                     this.touch.active = false;
+                }, { passive: false });
+                
+                // Touch move for horizontal movement
+                this.canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (this.gameState.gameActive && e.touches.length > 0) {
+                        const touch = e.touches[0];
+                        const rect = this.canvas.getBoundingClientRect();
+                        const touchX = touch.clientX - rect.left;
+                        const canvasWidth = this.canvas.width / window.devicePixelRatio;
+                        
+                        // Move runner based on touch position
+                        if (touchX < canvasWidth * 0.3) {
+                            this.moveLeft();
+                        } else if (touchX > canvasWidth * 0.7) {
+                            this.moveRight();
+                        }
+                    }
                 }, { passive: false });
                 
                 // Touch cancel
@@ -461,6 +488,18 @@
                 }
             }
             
+            moveLeft() {
+                if (!this.gameState.running) return;
+                this.runner.velocityX = -this.runner.maxSpeed;
+                console.log('Moving left');
+            }
+            
+            moveRight() {
+                if (!this.gameState.running) return;
+                this.runner.velocityX = this.runner.maxSpeed;
+                console.log('Moving right');
+            }
+            
             createJumpParticles() {
                 for (let i = 0; i < 8; i++) {
                     this.particles.push({
@@ -502,6 +541,20 @@
                 // Update runner
                 this.runner.velocityY += 0.8; // Gravity
                 this.runner.y += this.runner.velocityY;
+                
+                // Horizontal movement - NUEVO
+                this.runner.x += this.runner.velocityX;
+                this.runner.velocityX *= this.runner.friction; // Fricción para frenar
+                
+                // Keep runner within screen bounds
+                const margin = 20;
+                if (this.runner.x < margin) {
+                    this.runner.x = margin;
+                    this.runner.velocityX = 0;
+                } else if (this.runner.x > this.canvas.width - this.runner.width - margin) {
+                    this.runner.x = this.canvas.width - this.runner.width - margin;
+                    this.runner.velocityX = 0;
+                }
                 
                 // Ground collision - MITAD DE PANTALLA
                 const groundY = this.canvas.height / 2; // MITAD DE LA PANTALLA
