@@ -379,9 +379,9 @@
                 this.canvas.style.width = vw + 'px';
                 this.canvas.style.height = vh + 'px';
                 
-                // Update runner position - SIMPLE
+                // Update runner position - MITAD DE PANTALLA
                 this.runner.x = Math.min(100, vw * 0.2);
-                this.runner.y = vh - 80 - this.runner.height; // Sobre el suelo
+                this.runner.y = (vh / 2) - this.runner.height; // Sobre el suelo en la mitad
                 
                 // Ensure runner is visible
                 console.log(`Runner initialized: x=${this.runner.x}, y=${this.runner.y}, canvas: ${vw}x${vh}`);
@@ -503,8 +503,8 @@
                 this.runner.velocityY += 0.8; // Gravity
                 this.runner.y += this.runner.velocityY;
                 
-                // Ground collision - SIMPLE
-                const groundY = this.canvas.height - 80;
+                // Ground collision - MITAD DE PANTALLA
+                const groundY = this.canvas.height / 2; // MITAD DE LA PANTALLA
                 if (this.runner.y >= groundY - this.runner.height) {
                     this.runner.y = groundY - this.runner.height;
                     this.runner.velocityY = 0;
@@ -607,7 +607,7 @@
                 const types = ['normal', 'tall', 'wide', 'boss'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
-                const groundY = this.canvas.height - 80;
+                const groundY = this.canvas.height / 2; // MITAD DE LA PANTALLA
                 
                 let obstacle = {
                     x: this.canvas.width,
@@ -639,7 +639,7 @@
                 const types = ['speed', 'jump', 'shield', 'magnet'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
-                const groundY = this.canvas.height - 80;
+                const groundY = this.canvas.height / 2; // MITAD DE LA PANTALLA
                 
                 this.powerUps.push({
                     x: this.canvas.width,
@@ -652,7 +652,7 @@
             }
             
             spawnGem() {
-                const groundY = this.canvas.height - 80;
+                const groundY = this.canvas.height / 2; // MITAD DE LA PANTALLA
                 
                 this.gems.push({
                     x: this.canvas.width,
@@ -789,32 +789,33 @@
             }
             
             drawGround() {
-                // SUELO SIMPLE Y VISIBLE
-                const groundY = this.canvas.height - 80;
+                // SUELO FORZADO EN LA MITAD - IMPOSIBLE NO VERLO
+                const groundY = this.canvas.height / 2; // MITAD DE LA PANTALLA
+                const groundHeight = 100; // ALTURA FIJA
                 
-                // Suelo base - CYAN BRILLANTE
-                this.ctx.fillStyle = '#00FFFF';
-                this.ctx.fillRect(0, groundY, this.canvas.width, 80);
+                // Suelo base - ROJO BRILLANTE (IMPOSIBLE NO VERLO)
+                this.ctx.fillStyle = '#FF0000';
+                this.ctx.fillRect(0, groundY, this.canvas.width, groundHeight);
                 
-                // Borde del suelo - BLANCO
+                // Borde del suelo - BLANCO GRUESO
+                this.ctx.strokeStyle = '#FFFFFF';
+                this.ctx.lineWidth = 5;
+                this.ctx.strokeRect(0, groundY, this.canvas.width, groundHeight);
+                
+                // Líneas del suelo - MÁS VISIBLES
                 this.ctx.strokeStyle = '#FFFFFF';
                 this.ctx.lineWidth = 3;
-                this.ctx.strokeRect(0, groundY, this.canvas.width, 80);
-                
-                // Líneas del suelo
-                this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 2;
-                for (let i = 0; i < this.canvas.width; i += 50) {
+                for (let i = 0; i < this.canvas.width; i += 40) {
                     this.ctx.beginPath();
                     this.ctx.moveTo(i, groundY);
-                    this.ctx.lineTo(i + 25, groundY + 40);
+                    this.ctx.lineTo(i + 20, groundY + 50);
                     this.ctx.stroke();
                 }
                 
-                // Debug info
-                this.ctx.fillStyle = '#FF0000';
-                this.ctx.font = '16px Arial';
-                this.ctx.fillText(`SUELO: ${groundY}`, 10, this.canvas.height - 20);
+                // Debug info - MÁS GRANDE
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText(`SUELO ROJO EN MITAD: ${groundY}`, 10, groundY - 10);
                 
                 // Guardar posición para física
                 this.groundY = groundY;
@@ -980,7 +981,7 @@
             if (game) {
                 game.gameState.running = true;
                 game.runner.x = Math.min(100, window.innerWidth * 0.2);
-                game.runner.y = window.innerHeight - 80 - game.runner.height; // Sobre el suelo
+                game.runner.y = (window.innerHeight / 2) - game.runner.height; // Sobre el suelo en la mitad
                 game.runner.velocityY = 0;
                 game.runner.onGround = true;
                 console.log('Game restarted, runner position reset');
@@ -1010,7 +1011,7 @@
                 game.powerUps = [];
                 game.gems = [];
                 game.runner.x = Math.min(100, window.innerWidth * 0.2);
-                game.runner.y = window.innerHeight - 80 - game.runner.height; // Sobre el suelo
+                game.runner.y = (window.innerHeight / 2) - game.runner.height; // Sobre el suelo en la mitad
                 game.runner.velocityY = 0;
                 game.runner.onGround = true;
                 game.runner.dashCooldown = 0;
