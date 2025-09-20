@@ -382,9 +382,9 @@
                 this.canvas.style.width = vw + 'px';
                 this.canvas.style.height = vh + 'px';
                 
-                // Update runner position - 90% DE PANTALLA
+                // Update runner position - POSICIÓN FIJA
                 this.runner.x = Math.min(100, vw * 0.2);
-                this.runner.y = (vh * 0.9) - this.runner.height; // Sobre el suelo en 90%
+                this.runner.y = 400 - this.runner.height; // Sobre el suelo fijo
                 
                 // Ensure runner is visible
                 console.log(`Runner initialized: x=${this.runner.x}, y=${this.runner.y}, canvas: ${vw}x${vh}`);
@@ -556,8 +556,8 @@
                     this.runner.velocityX = 0;
                 }
                 
-                // Ground collision - 90% DE PANTALLA
-                const groundY = this.canvas.height * 0.9; // 90% DE LA PANTALLA
+                // Ground collision - POSICIÓN FIJA
+                const groundY = 400; // POSICIÓN FIJA
                 if (this.runner.y >= groundY - this.runner.height) {
                     this.runner.y = groundY - this.runner.height;
                     this.runner.velocityY = 0;
@@ -660,7 +660,7 @@
                 const types = ['normal', 'tall', 'wide', 'boss'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
-                const groundY = this.canvas.height * 0.9; // 90% DE LA PANTALLA
+                const groundY = 400; // POSICIÓN FIJA
                 
                 let obstacle = {
                     x: this.canvas.width,
@@ -692,7 +692,7 @@
                 const types = ['speed', 'jump', 'shield', 'magnet'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
-                const groundY = this.canvas.height * 0.9; // 90% DE LA PANTALLA
+                const groundY = 400; // POSICIÓN FIJA
                 
                 this.powerUps.push({
                     x: this.canvas.width,
@@ -705,7 +705,7 @@
             }
             
             spawnGem() {
-                const groundY = this.canvas.height * 0.9; // 90% DE LA PANTALLA
+                const groundY = 400; // POSICIÓN FIJA
                 
                 this.gems.push({
                     x: this.canvas.width,
@@ -842,9 +842,9 @@
             }
             
             drawGround() {
-                // SUELO ULTRA ALTO - IMPOSIBLE NO VERLO
-                const groundY = this.canvas.height * 0.9; // 90% DE LA PANTALLA
-                const groundHeight = 200; // ALTURA ULTRA GRANDE
+                // SUELO FIJO - IMPOSIBLE NO VERLO
+                const groundY = 400; // POSICIÓN FIJA
+                const groundHeight = 300; // ALTURA FIJA GIGANTE
                 
                 // Suelo base - CYAN NEON (MEJOR VISUAL)
                 this.ctx.fillStyle = '#00FFFF';
@@ -1051,7 +1051,7 @@
             if (game) {
                 game.gameState.running = true;
                 game.runner.x = Math.min(100, window.innerWidth * 0.2);
-                game.runner.y = (window.innerHeight * 0.9) - game.runner.height; // Sobre el suelo en 90%
+                game.runner.y = 400 - game.runner.height; // Sobre el suelo fijo
                 game.runner.velocityY = 0;
                 game.runner.onGround = true;
                 console.log('Game restarted, runner position reset');
@@ -1081,7 +1081,7 @@
                 game.powerUps = [];
                 game.gems = [];
                 game.runner.x = Math.min(100, window.innerWidth * 0.2);
-                game.runner.y = (window.innerHeight * 0.9) - game.runner.height; // Sobre el suelo en 90%
+                game.runner.y = 400 - game.runner.height; // Sobre el suelo fijo
                 game.runner.velocityY = 0;
                 game.runner.onGround = true;
                 game.runner.dashCooldown = 0;
