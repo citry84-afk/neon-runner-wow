@@ -385,9 +385,9 @@
                 this.canvas.style.width = vw + 'px';
                 this.canvas.style.height = vh + 'px';
                 
-                // Update runner position - SIEMPRE VISIBLE EN CENTRO
+                // Update runner position - SOBRE EL SUELO
                 this.runner.x = vw * 0.1; // 10% desde la izquierda
-                this.runner.y = vh * 0.5; // CENTRO DE LA PANTALLA
+                this.runner.y = (vh * 0.6) - this.runner.height; // SOBRE EL SUELO EN 60%
                 
                 // Ensure runner is visible
                 console.log(`Runner initialized: x=${this.runner.x}, y=${this.runner.y}, canvas: ${vw}x${vh}`);
@@ -560,7 +560,7 @@
                 }
                 
                 // Ground collision - RESPONSIVO
-                const groundY = this.canvas.height * 0.8; // 80% DE LA PANTALLA
+                const groundY = this.canvas.height * 0.6; // 60% DE LA PANTALLA (MÁS ARRIBA)
                 if (this.runner.y >= groundY - this.runner.height) {
                     this.runner.y = groundY - this.runner.height;
                     this.runner.velocityY = 0;
@@ -663,7 +663,7 @@
                 const types = ['normal', 'tall', 'wide', 'boss'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
-                const groundY = this.canvas.height * 0.8; // 80% DE LA PANTALLA
+                const groundY = this.canvas.height * 0.6; // 60% DE LA PANTALLA
                 
                 let obstacle = {
                     x: this.canvas.width,
@@ -695,7 +695,7 @@
                 const types = ['speed', 'jump', 'shield', 'magnet'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
-                const groundY = this.canvas.height * 0.8; // 80% DE LA PANTALLA
+                const groundY = this.canvas.height * 0.6; // 60% DE LA PANTALLA
                 
                 this.powerUps.push({
                     x: this.canvas.width,
@@ -708,7 +708,7 @@
             }
             
             spawnGem() {
-                const groundY = this.canvas.height * 0.8; // 80% DE LA PANTALLA
+                const groundY = this.canvas.height * 0.6; // 60% DE LA PANTALLA
                 
                 this.gems.push({
                     x: this.canvas.width,
@@ -846,13 +846,13 @@
             
             drawGround() {
                 // SUELO RESPONSIVO - ESCALADO A PANTALLA
-                const groundY = this.canvas.height * 0.8; // 80% DE LA PANTALLA
-                const groundHeight = this.canvas.height * 0.2; // 20% DE LA PANTALLA
+                const groundY = this.canvas.height * 0.6; // 60% DE LA PANTALLA (MÁS ARRIBA)
+                const groundHeight = this.canvas.height * 0.4; // 40% DE LA PANTALLA (MÁS ALTO)
                 
                 // Debug info - VISIBLE PARA DEBUGGING
                 this.ctx.fillStyle = '#FFFFFF';
                 this.ctx.font = '24px Arial';
-                this.ctx.fillText(`SUELO EN 80%: ${groundY}`, 10, groundY - 10);
+                this.ctx.fillText(`SUELO EN 60%: ${groundY}`, 10, groundY - 10);
                 
                 // Suelo base - CYAN NEON SUPER BRILLANTE
                 this.ctx.fillStyle = '#00FFFF';
