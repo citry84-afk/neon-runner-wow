@@ -849,20 +849,29 @@
                 const groundY = this.canvas.height * 0.8; // 80% DE LA PANTALLA
                 const groundHeight = this.canvas.height * 0.2; // 20% DE LA PANTALLA
                 
-                // Suelo base - CYAN NEON (MEJOR VISUAL)
+                // Debug info - VISIBLE PARA DEBUGGING
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText(`SUELO EN 80%: ${groundY}`, 10, groundY - 10);
+                
+                // Suelo base - CYAN NEON SUPER BRILLANTE
                 this.ctx.fillStyle = '#00FFFF';
                 this.ctx.fillRect(0, groundY, this.canvas.width, groundHeight);
                 
+                // Segundo rectángulo para más visibilidad
+                this.ctx.fillStyle = '#00CCCC';
+                this.ctx.fillRect(0, groundY + 5, this.canvas.width, groundHeight - 10);
+                
                 // Efecto de gradiente para más profundidad
                 const gradient = this.ctx.createLinearGradient(0, groundY, 0, groundY + groundHeight);
-                gradient.addColorStop(0, 'rgba(0, 255, 255, 0.8)');
-                gradient.addColorStop(1, 'rgba(0, 255, 255, 0.3)');
+                gradient.addColorStop(0, 'rgba(0, 255, 255, 1.0)');
+                gradient.addColorStop(1, 'rgba(0, 255, 255, 0.8)');
                 this.ctx.fillStyle = gradient;
                 this.ctx.fillRect(0, groundY, this.canvas.width, groundHeight);
                 
-                // Borde del suelo - BLANCO GRUESO
+                // Borde del suelo - BLANCO MUY GRUESO
                 this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 3;
+                this.ctx.lineWidth = 5;
                 this.ctx.strokeRect(0, groundY, this.canvas.width, groundHeight);
                 
                 // Líneas del suelo - PATRÓN NEON
