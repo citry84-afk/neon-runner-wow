@@ -343,8 +343,8 @@
                 this.runner = {
                     x: 100,
                     y: 0, // Se posicionará correctamente en setupCanvas
-                    width: 80, // MÁS GRANDE
-                    height: 100, // MÁS GRANDE
+                    width: 120, // GIGANTE
+                    height: 150, // GIGANTE
                     velocityY: 0,
                     velocityX: 0, // Nueva: velocidad horizontal
                     onGround: true,
@@ -385,9 +385,9 @@
                 this.canvas.style.width = vw + 'px';
                 this.canvas.style.height = vh + 'px';
                 
-                // Update runner position - RESPONSIVO
-                this.runner.x = Math.min(100, vw * 0.2);
-                this.runner.y = (vh * 0.8) - this.runner.height; // Sobre el suelo responsivo
+                // Update runner position - SIEMPRE VISIBLE EN CENTRO
+                this.runner.x = vw * 0.1; // 10% desde la izquierda
+                this.runner.y = vh * 0.5; // CENTRO DE LA PANTALLA
                 
                 // Ensure runner is visible
                 console.log(`Runner initialized: x=${this.runner.x}, y=${this.runner.y}, canvas: ${vw}x${vh}`);
@@ -918,13 +918,17 @@
                     this.ctx.shadowBlur = 25;
                 }
                 
-                // Runner body - SUPER GRANDE Y VISIBLE
-                this.ctx.fillStyle = '#00FFFF';
+                // Runner body - ROJO IMPOSIBLE DE NO VER
+                this.ctx.fillStyle = '#FF0000';
                 this.ctx.fillRect(this.runner.x, this.runner.y, this.runner.width, this.runner.height);
                 
                 // Segundo rectángulo para más visibilidad
-                this.ctx.fillStyle = '#00CCCC';
-                this.ctx.fillRect(this.runner.x + 2, this.runner.y + 2, this.runner.width - 4, this.runner.height - 4);
+                this.ctx.fillStyle = '#FF6666';
+                this.ctx.fillRect(this.runner.x + 5, this.runner.y + 5, this.runner.width - 10, this.runner.height - 10);
+                
+                // Tercer rectángulo para máxima visibilidad
+                this.ctx.fillStyle = '#FFAAAA';
+                this.ctx.fillRect(this.runner.x + 10, this.runner.y + 10, this.runner.width - 20, this.runner.height - 20);
                 
                 // Runner head - MÁS GRANDE
                 this.ctx.fillStyle = '#00CCFF';
@@ -935,15 +939,38 @@
                 this.ctx.fillRect(this.runner.x + 6, this.runner.y + 6, 12, 12);
                 this.ctx.fillRect(this.runner.x + 26, this.runner.y + 6, 12, 12);
                 
-                // Borde blanco del corredor - SUPER GRUESO
+                // Borde blanco del corredor - ULTRA GRUESO
                 this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 4;
+                this.ctx.lineWidth = 8;
                 this.ctx.strokeRect(this.runner.x, this.runner.y, this.runner.width, this.runner.height);
                 
-                // Debug text del corredor
+                // Segundo borde para máxima visibilidad
+                this.ctx.strokeStyle = '#000000';
+                this.ctx.lineWidth = 4;
+                this.ctx.strokeRect(this.runner.x + 2, this.runner.y + 2, this.runner.width - 4, this.runner.height - 4);
+                
+                // Debug text del corredor - GIGANTE
                 this.ctx.fillStyle = '#FFFFFF';
-                this.ctx.font = '16px Arial';
-                this.ctx.fillText(`CORREDOR: ${this.runner.x},${this.runner.y}`, this.runner.x, this.runner.y - 10);
+                this.ctx.font = '32px Arial';
+                this.ctx.fillText(`CORREDOR GIGANTE: ${this.runner.x},${this.runner.y}`, this.runner.x, this.runner.y - 20);
+                
+                // CORREDOR DE EMERGENCIA - SIEMPRE VISIBLE EN CENTRO
+                const centerX = this.canvas.width / 2 - 60;
+                const centerY = this.canvas.height / 2 - 75;
+                
+                // Corredor de emergencia - ROJO BRILLANTE
+                this.ctx.fillStyle = '#FF0000';
+                this.ctx.fillRect(centerX, centerY, 120, 150);
+                
+                // Borde del corredor de emergencia
+                this.ctx.strokeStyle = '#FFFFFF';
+                this.ctx.lineWidth = 10;
+                this.ctx.strokeRect(centerX, centerY, 120, 150);
+                
+                // Texto de emergencia
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText('CORREDOR EMERGENCIA', centerX, centerY - 10);
                 
                 // Runner body details
                 this.ctx.fillStyle = '#0088FF';
