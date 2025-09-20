@@ -541,9 +541,9 @@
             update(deltaTime) {
                 if (!this.gameState.running) return;
                 
-                // Update runner - GRAVEDAD DESACTIVADA
-                this.runner.velocityY += 0.0; // Gravity DESACTIVADA
-                this.runner.y += this.runner.velocityY;
+                // Update runner - COMPLETAMENTE FIJO
+                this.runner.velocityY = 0; // VELOCIDAD VERTICAL CERO
+                this.runner.y = 50; // POSICIÓN FIJA EN Y=50
                 
                 // Horizontal movement - NUEVO
                 this.runner.x += this.runner.velocityX;
@@ -559,19 +559,10 @@
                     this.runner.velocityX = 0;
                 }
                 
-                // Ground collision - FORZAR POSICIÓN VISIBLE
-                const groundY = this.canvas.height * 0.6; // 60% DE LA PANTALLA (MÁS ARRIBA)
-                if (this.runner.y >= groundY - this.runner.height) {
-                    this.runner.y = groundY - this.runner.height;
-                    this.runner.velocityY = 0;
-                    this.runner.onGround = true;
-                }
-                
-                // FORZAR CORREDOR SIEMPRE VISIBLE
-                if (this.runner.y > this.canvas.height - 200) {
-                    this.runner.y = 50; // RESET A POSICIÓN VISIBLE
-                    this.runner.velocityY = 0;
-                }
+                // CORREDOR COMPLETAMENTE FIJO - SIN FÍSICA
+                this.runner.y = 50; // SIEMPRE EN Y=50
+                this.runner.velocityY = 0; // SIN VELOCIDAD VERTICAL
+                this.runner.onGround = true; // SIEMPRE EN SUELO
                 
                 // Update dash cooldown
                 if (this.runner.dashCooldown > 0) {
