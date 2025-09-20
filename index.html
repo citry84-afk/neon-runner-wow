@@ -795,6 +795,51 @@
                 this.ctx.font = '48px Arial';
                 this.ctx.fillText('EMERGENCIA - CORREDOR DEBE SER VISIBLE', 50, 100);
                 
+                // CORREDOR GIGANTE EN CENTRO - IMPOSIBLE DE NO VER
+                const centerX = this.canvas.width / 2 - 100;
+                const centerY = this.canvas.height / 2 - 100;
+                
+                // Múltiples capas de corredor
+                for (let i = 0; i < 5; i++) {
+                    const offset = i * 10;
+                    this.ctx.fillStyle = i % 2 === 0 ? '#FF0000' : '#00FF00';
+                    this.ctx.fillRect(centerX + offset, centerY + offset, 200, 200);
+                    
+                    // Borde blanco grueso
+                    this.ctx.strokeStyle = '#FFFFFF';
+                    this.ctx.lineWidth = 10;
+                    this.ctx.strokeRect(centerX + offset, centerY + offset, 200, 200);
+                }
+                
+                // Texto gigante en el centro
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.font = '64px Arial';
+                this.ctx.fillText('CORREDOR CENTRO', centerX, centerY - 20);
+                
+                // CORREDORES EN LAS 4 ESQUINAS
+                const corners = [
+                    { x: 50, y: 50, color: '#FF00FF', text: 'ESQUINA 1' },
+                    { x: this.canvas.width - 250, y: 50, color: '#00FFFF', text: 'ESQUINA 2' },
+                    { x: 50, y: this.canvas.height - 250, color: '#FFFF00', text: 'ESQUINA 3' },
+                    { x: this.canvas.width - 250, y: this.canvas.height - 250, color: '#FF8000', text: 'ESQUINA 4' }
+                ];
+                
+                corners.forEach((corner, index) => {
+                    // Corredor gigante en cada esquina
+                    this.ctx.fillStyle = corner.color;
+                    this.ctx.fillRect(corner.x, corner.y, 200, 200);
+                    
+                    // Borde blanco grueso
+                    this.ctx.strokeStyle = '#FFFFFF';
+                    this.ctx.lineWidth = 15;
+                    this.ctx.strokeRect(corner.x, corner.y, 200, 200);
+                    
+                    // Texto en cada esquina
+                    this.ctx.fillStyle = '#FFFFFF';
+                    this.ctx.font = '32px Arial';
+                    this.ctx.fillText(corner.text, corner.x, corner.y - 10);
+                });
+                
                 // Draw background
                 this.drawBackground();
                 
