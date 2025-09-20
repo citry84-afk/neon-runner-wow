@@ -786,6 +786,11 @@
             }
             
             render() {
+                // DIAGNÓSTICO COMPLETO DEL CANVAS
+                console.log('🔍 RENDER CALLED - Canvas dimensions:', this.canvas.width, 'x', this.canvas.height);
+                console.log('🔍 Canvas context:', this.ctx);
+                console.log('🔍 Game state:', this.gameState);
+                
                 // Clear canvas
                 this.ctx.fillStyle = '#000';
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -794,6 +799,13 @@
                 this.ctx.fillStyle = '#FFFFFF';
                 this.ctx.font = '48px Arial';
                 this.ctx.fillText('EMERGENCIA - CORREDOR DEBE SER VISIBLE', 50, 100);
+                
+                // DIAGNÓSTICO DEL CANVAS
+                this.ctx.fillStyle = '#FF0000';
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText(`CANVAS: ${this.canvas.width}x${this.canvas.height}`, 50, 150);
+                this.ctx.fillText(`GAME STATE: ${this.gameState.running ? 'RUNNING' : 'STOPPED'}`, 50, 180);
+                this.ctx.fillText(`RUNNER: x=${this.runner.x}, y=${this.runner.y}`, 50, 210);
                 
                 // CORREDOR GIGANTE EN CENTRO - IMPOSIBLE DE NO VER
                 const centerX = this.canvas.width / 2 - 100;
@@ -1228,6 +1240,28 @@
         // ===== INITIALIZATION =====
         window.addEventListener('load', () => {
             console.log('🚀 Initializing Neon Runner WOW...');
+            
+            // TEST INMEDIATO DEL CANVAS
+            const testCanvas = document.getElementById('gameCanvas');
+            if (testCanvas) {
+                console.log('✅ Canvas encontrado:', testCanvas);
+                const testCtx = testCanvas.getContext('2d');
+                if (testCtx) {
+                    console.log('✅ Context obtenido:', testCtx);
+                    
+                    // Test básico de dibujo
+                    testCtx.fillStyle = '#FF0000';
+                    testCtx.fillRect(0, 0, 100, 100);
+                    testCtx.fillStyle = '#FFFFFF';
+                    testCtx.font = '20px Arial';
+                    testCtx.fillText('TEST CANVAS', 10, 50);
+                    console.log('✅ Test de dibujo completado');
+                } else {
+                    console.error('❌ No se pudo obtener context del canvas');
+                }
+            } else {
+                console.error('❌ Canvas no encontrado');
+            }
             
             // Initialize game
             game = new UltraOptimizedGame();
