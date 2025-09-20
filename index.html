@@ -304,7 +304,10 @@
         <div class="game-over-screen" id="gameOverScreen">
             <h2 class="game-over-title">GAME OVER</h2>
             <div class="final-score" id="finalScore">SCORE: 0</div>
-            <button class="restart-button" onclick="restartGame()">🔄 PLAY AGAIN</button>
+            <div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center;">
+                <button class="restart-button" onclick="restartGame()">🔄 PLAY AGAIN</button>
+                <button class="restart-button" onclick="shareScore()" style="background: linear-gradient(45deg, #FF0080, #00FFFF); color: white; border: 3px solid #FFFFFF; font-size: 1.2rem; padding: 15px 25px; box-shadow: 0 0 20px #FF0080;">📱 COMPARTIR VIRAL</button>
+            </div>
         </div>
         
         <!-- AdSense Banners -->
@@ -1142,6 +1145,62 @@
                 game.setupCanvas();
             }
         });
+        
+        // ===== SHARE FUNCTIONS =====
+        function shareScore() {
+            const score = game ? game.score : 0;
+            const combo = game ? game.combo : 1;
+            
+            const shareText = `🏃‍♂️ ¡Acabo de conseguir ${score} puntos en Neon Runner WOW! 🎮\n\n🔥 Combo: ${combo}x\n\n🚀 ¡Juega tú también en https://runnerwow.netlify.app!\n\n#NeonRunnerWOW #LIPAStudios #JuegosNeon`;
+            
+            // Intentar compartir nativo
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Neon Runner WOW - Mi Puntuación',
+                    text: shareText,
+                    url: 'https://runnerwow.netlify.app'
+                }).then(() => {
+                    console.log('✅ Compartido exitosamente');
+                    // Track sharing event
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'share', {
+                            method: 'native',
+                            content_type: 'game_score',
+                            score: score
+                        });
+                    }
+                }).catch((error) => {
+                    console.log('Error al compartir:', error);
+                    fallbackShare(shareText);
+                });
+            } else {
+                fallbackShare(shareText);
+            }
+        }
+        
+        // Fallback para compartir
+        function fallbackShare(text) {
+            // Copiar al portapapeles
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('📋 ¡Texto copiado! Pega en tu red social favorita');
+                    // Track sharing event
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'share', {
+                            method: 'clipboard',
+                            content_type: 'game_score',
+                            score: game ? game.score : 0
+                        });
+                    }
+                }).catch(() => {
+                    // Fallback manual
+                    prompt('📋 Copia este texto para compartir:', text);
+                });
+            } else {
+                // Fallback manual
+                prompt('📋 Copia este texto para compartir:', text);
+            }
+        }
     </script>
 </body>
 </html>
