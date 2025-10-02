@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Leaderboard Fix - Neon Runner WOW</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #111 50%, #000 100%);
+            color: #00FFFF;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .test-section {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00FFFF;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(45deg, #00FFFF, #FF00FF);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #00FF00;
+            color: #00FF00;
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #FF0000;
+            color: #FF0000;
+        }
+        .info {
+            background: rgba(0, 255, 255, 0.2);
+            border: 2px solid #00FFFF;
+            color: #00FFFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Leaderboard Fix - Neon Runner WOW</h1>
+        
+        <div class="test-section">
+            <h2>Estado del Sistema</h2>
+            <div id="status" class="status info">Cargando...</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Pruebas del Leaderboard</h2>
+            <button onclick="testLeaderboardInit()">Inicializar Leaderboard</button>
+            <button onclick="testSubmitScore()">Enviar Puntuacion</button>
+            <button onclick="testShowRanking()">Mostrar Ranking</button>
+            <button onclick="testShowBadges()">Mostrar Badges</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Informacion del Usuario</h2>
+            <div id="user-info" class="status info">No hay usuario registrado</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Ranking Actual</h2>
+            <div id="ranking-info" class="status info">No hay datos</div>
+        </div>
+    </div>
+
+    <script src="leaderboard.js"></script>
+    <script>
+        let leaderboard = null;
+        
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+        
+        function updateUserInfo() {
+            const userInfoEl = document.getElementById('user-info');
+            if (leaderboard && leaderboard.currentUser) {
+                const stats = leaderboard.getStats();
+                userInfoEl.innerHTML = `
+                    <strong>Usuario:</strong> ${stats.name}<br>
+                    <strong>Juegos totales:</strong> ${stats.totalGames}<br>
+                    <strong>Mejor puntuacion:</strong> ${stats.bestScore.toLocaleString()}<br>
+                    <strong>Posicion actual:</strong> #${stats.currentRank || 'No clasificado'}<br>
+                    <strong>Badges:</strong> ${stats.badgesCount}
+                `;
+                userInfoEl.className = 'status success';
+            } else {
+                userInfoEl.textContent = 'No hay usuario registrado';
+                userInfoEl.className = 'status info';
+            }
+        }
+        
+        function updateRankingInfo() {
+            const rankingEl = document.getElementById('ranking-info');
+            if (leaderboard) {
+                const ranking = leaderboard.getRanking();
+                if (ranking.length > 0) {
+                    rankingEl.innerHTML = ranking.map((entry, index) => 
+                        `#${index + 1} ${entry.name}: ${entry.score.toLocaleString()} puntos`
+                    ).join('<br>');
+                    rankingEl.className = 'status success';
+                } else {
+                    rankingEl.textContent = 'No hay puntuaciones en el ranking';
+                    rankingEl.className = 'status info';
+                }
+            }
+        }
+        
+        function testLeaderboardInit() {
+            try {
+                leaderboard = new DailyLeaderboard('neon-runner-wow');
+                updateStatus('Leaderboard inicializado correctamente!', 'success');
+                updateUserInfo();
+                updateRankingInfo();
+            } catch (e) {
+                updateStatus(`Error al inicializar leaderboard: ${e.message}`, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        function testSubmitScore() {
+            if (!leaderboard) {
+                updateStatus('Primero inicializa el leaderboard', 'error');
+                return;
+            }
+            
+            try {
+                const score = Math.floor(Math.random() * 50000) + 10000;
+                const level = Math.floor(score / 1000) + 1;
+                const combo = Math.floor(Math.random() * 30) + 10;
+                
+                const success = leaderboard.submitScore(score, level, combo);
+                if (success) {
+                    updateStatus(`Puntuacion enviada: ${score.toLocaleString()} puntos`, 'success');
+                    updateUserInfo();
+                    updateRankingInfo();
+                } else {
+                    updateStatus('Se solicito nombre de usuario', 'info');
+                }
+            } catch (e) {
+                updateStatus(`Error al enviar puntuacion: ${e.message}`, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        function testShowRanking() {
+            if (!leaderboard) {
+                updateStatus('Primero inicializa el leaderboard', 'error');
+                return;
+            }
+            
+            try {
+                leaderboard.showRanking({ name: 'Test', score: 0 });
+                updateStatus('Ranking mostrado correctamente', 'success');
+            } catch (e) {
+                updateStatus(`Error al mostrar ranking: ${e.message}`, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        function testShowBadges() {
+            if (!leaderboard) {
+                updateStatus('Primero inicializa el leaderboard', 'error');
+                return;
+            }
+            
+            try {
+                leaderboard.showBadges();
+                updateStatus('Badges mostrados correctamente', 'success');
+            } catch (e) {
+                updateStatus(`Error al mostrar badges: ${e.message}`, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        // Inicializar automaticamente al cargar
+        window.addEventListener('load', () => {
+            try {
+                if (typeof DailyLeaderboard !== 'undefined') {
+                    updateStatus('DailyLeaderboard cargado correctamente!', 'success');
+                    testLeaderboardInit();
+                } else {
+                    updateStatus('DailyLeaderboard NO encontrado', 'error');
+                }
+            } catch (e) {
+                updateStatus(`Error al cargar: ${e.message}`, 'error');
+                console.error('Error:', e);
+            }
+        });
+    </script>
+</body>
+</html>
