@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Leaderboard - Neon Runner WOW</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #111 50%, #000 100%);
+            color: #00FFFF;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .test-section {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00FFFF;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(45deg, #00FFFF, #FF00FF);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #00FFFF;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .success { border-left: 4px solid #00FF00; }
+        .error { border-left: 4px solid #FF0000; }
+        .info { border-left: 4px solid #00FFFF; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Test Leaderboard - Neon Runner WOW</h1>
+        
+        <div class="test-section">
+            <h2>Estado del Leaderboard</h2>
+            <div id="status" class="status info">Inicializando...</div>
+            <button onclick="testInit()">🔄 Reinicializar Leaderboard</button>
+            <button onclick="testShowRanking()">📊 Mostrar Ranking</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Simular Puntuaciones</h2>
+            <button onclick="simulateScore(1000, 1, 5)">🎮 Simular Score: 1,000</button>
+            <button onclick="simulateScore(5000, 5, 10)">🎮 Simular Score: 5,000</button>
+            <button onclick="simulateScore(15000, 15, 25)">🎮 Simular Score: 15,000</button>
+            <button onclick="simulateScore(50000, 50, 50)">🎮 Simular Score: 50,000</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Funciones de Usuario</h2>
+            <button onclick="testSetName()">👤 Cambiar Nombre</button>
+            <button onclick="testShowBadges()">🏅 Ver Badges</button>
+            <button onclick="testShare()">📱 Compartir Ranking</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Información del Sistema</h2>
+            <div id="info" class="status info">Cargando información...</div>
+        </div>
+    </div>
+
+    <!-- Incluir el sistema de leaderboard -->
+    <script src="leaderboard.js"></script>
+    
+    <script>
+        let leaderboard;
+        
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+        
+        function updateInfo() {
+            const infoEl = document.getElementById('info');
+            if (leaderboard) {
+                const stats = leaderboard.getStats();
+                const ranking = leaderboard.getRanking();
+                const badges = leaderboard.badges;
+                
+                infoEl.innerHTML = `
+                    <strong>Usuario:</strong> ${stats ? stats.name : 'No registrado'}<br>
+                    <strong>Mejor Score:</strong> ${stats ? stats.bestScore.toLocaleString() : '0'}<br>
+                    <strong>Ranking Actual:</strong> #${stats ? stats.currentRank || 'No clasificado' : 'No clasificado'}<br>
+                    <strong>Total Juegos:</strong> ${stats ? stats.totalGames : '0'}<br>
+                    <strong>Badges:</strong> ${badges.length}<br>
+                    <strong>Racha Diaria:</strong> ${stats ? stats.streak : '0'} días<br>
+                    <strong>Entradas en Ranking:</strong> ${ranking.length}
+                `;
+            } else {
+                infoEl.textContent = 'Leaderboard no inicializado';
+            }
+        }
+        
+        function testInit() {
+            try {
+                leaderboard = new DailyLeaderboard('neon-runner-wow');
+                window.leaderboard = leaderboard;
+                updateStatus('✅ Leaderboard inicializado correctamente', 'success');
+                updateInfo();
+                console.log('🏆 Leaderboard inicializado:', leaderboard);
+            } catch (e) {
+                updateStatus('❌ Error al inicializar leaderboard: ' + e.message, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        function testShowRanking() {
+            if (!leaderboard) {
+                updateStatus('❌ Leaderboard no inicializado', 'error');
+                return;
+            }
+            
+            try {
+                leaderboard.showRanking({ 
+                    name: leaderboard.currentUser?.name || 'Anónimo', 
+                    score: leaderboard.currentUser?.bestScore || 0 
+                });
+                updateStatus('✅ Ranking mostrado correctamente', 'success');
+            } catch (e) {
+                updateStatus('❌ Error al mostrar ranking: ' + e.message, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        function simulateScore(score, level, combo) {
+            if (!leaderboard) {
+                updateStatus('❌ Leaderboard no inicializado', 'error');
+                return;
+            }
+            
+            try {
+                const success = leaderboard.submitScore(score, level, combo);
+                if (success) {
+                    updateStatus(`✅ Score ${score.toLocaleString()} enviado correctamente`, 'success');
+                } else {
+                    updateStatus(`⏳ Score ${score.toLocaleString()} guardado para envío posterior`, 'info');
+                }
+                updateInfo();
+            } catch (e) {
+                updateStatus('❌ Error al enviar score: ' + e.message, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        function testSetName() {
+            if (!leaderboard) {
+                updateStatus('❌ Leaderboard no inicializado', 'error');
+                return;
+            }
+            
+            try {
+                leaderboard.showNamePrompt(false);
+                updateStatus('✅ Prompt de nombre mostrado', 'success');
+            } catch (e) {
+                updateStatus('❌ Error al mostrar prompt: ' + e.message, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        function testShowBadges() {
+            if (!leaderboard) {
+                updateStatus('❌ Leaderboard no inicializado', 'error');
+                return;
+            }
+            
+            try {
+                leaderboard.showBadges();
+                updateStatus('✅ Badges mostrados correctamente', 'success');
+            } catch (e) {
+                updateStatus('❌ Error al mostrar badges: ' + e.message, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        function testShare() {
+            if (!leaderboard) {
+                updateStatus('❌ Leaderboard no inicializado', 'error');
+                return;
+            }
+            
+            try {
+                const stats = leaderboard.getStats();
+                const scoreData = {
+                    score: stats ? stats.bestScore : 0,
+                    name: stats ? stats.name : 'Anónimo'
+                };
+                const userRank = leaderboard.getUserRank();
+                leaderboard.shareRanking(scoreData, userRank);
+                updateStatus('✅ Función de compartir ejecutada', 'success');
+            } catch (e) {
+                updateStatus('❌ Error al compartir: ' + e.message, 'error');
+                console.error('Error:', e);
+            }
+        }
+        
+        // Inicializar automáticamente
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testInit();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

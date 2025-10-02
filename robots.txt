@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://stack-tower-neon2.netlify.app/sitemap.xml
+
+# Important pages for Google
+Allow: /privacy.html
+Allow: /terms.html
+Allow: /ads.txt
+
+# Block unnecessary files
+Disallow: /consent.js
+Disallow: /*.json$
+Disallow: /netlify.toml
