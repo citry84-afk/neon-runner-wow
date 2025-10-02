@@ -1,0 +1,14 @@
+# Redirects para Neon Runner WOW
+# Redirigir desde lipastudios.com/runner a runnerwow.netlify.app
+
+# Redirect principal del juego
+/runner/* https://runnerwow.netlify.app/:splat 301!
+
+# Redirect de la página principal del juego
+/runner https://runnerwow.netlify.app/ 301!
+
+# Redirect para el leaderboard
+/runner/leaderboard https://runnerwow.netlify.app/test-leaderboard-simple.html 301!
+
+# Redirect para la guía
+/runner/guide https://runnerwow.netlify.app/LEADERBOARD-GUIDE.md 301!
