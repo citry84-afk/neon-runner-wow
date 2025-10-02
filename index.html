@@ -29,124 +29,10 @@
     <!-- Consent Mode v2 + Banner -->
     <script defer src="consent.js"></script>
     <!-- Leaderboard System -->
-    <script src="leaderboard-global-working.js"></script>
+    <script src="leaderboard-unified.js"></script>
     <script>
-        // Leaderboard simple integrado
-        console.log('Leaderboard system loading...');
-        class DailyLeaderboard {
-            constructor(gameName) {
-                this.gameName = gameName;
-                this.storageKey = `lipa_leaderboard_${gameName}`;
-                this.today = new Date().toISOString().split('T')[0];
-                this.leaderboard = this.loadLeaderboard();
-                this.currentUser = this.loadCurrentUser();
-            }
-            loadLeaderboard() {
-                try {
-                    const data = JSON.parse(localStorage.getItem(this.storageKey) || '{}');
-                    if (data.date !== this.today) return { date: this.today, scores: [] };
-                    return data;
-                } catch (e) { return { date: this.today, scores: [] }; }
-            }
-            loadCurrentUser() {
-                try { return JSON.parse(localStorage.getItem(`lipa_user_${this.gameName}`) || 'null'); }
-                catch (e) { return null; }
-            }
-            saveLeaderboard() {
-                try { localStorage.setItem(this.storageKey, JSON.stringify(this.leaderboard)); }
-                catch (e) { console.error('Error saving leaderboard:', e); }
-            }
-            saveCurrentUser() {
-                try { localStorage.setItem(`lipa_user_${this.gameName}`, JSON.stringify(this.currentUser)); }
-                catch (e) { console.error('Error saving user:', e); }
-            }
-            setUserName(name) {
-                this.currentUser = {
-                    name: name.trim().substring(0, 15),
-                    joinDate: this.currentUser?.joinDate || new Date().toISOString(),
-                    totalGames: this.currentUser?.totalGames || 0,
-                    bestScore: this.currentUser?.bestScore || 0
-                };
-                this.saveCurrentUser();
-            }
-            submitScore(score, level = 1, combo = 0) {
-                if (!this.currentUser) {
-                    this._pendingSubmission = { score, level, combo };
-                    this.showNamePrompt(true);
-                    return false;
-                }
-                const scoreData = { name: this.currentUser.name, score: score, level: level, combo: combo, timestamp: Date.now() };
-                this.leaderboard.scores.push(scoreData);
-                this.leaderboard.scores.sort((a, b) => b.score - a.score);
-                this.leaderboard.scores = this.leaderboard.scores.slice(0, 50);
-                this.saveLeaderboard();
-                this.currentUser.totalGames++;
-                if (score > this.currentUser.bestScore) {
-                    this.currentUser.bestScore = score;
-                }
-                this.saveCurrentUser();
-                this.showRanking(scoreData);
-                return true;
-            }
-            getRanking() { return this.leaderboard.scores.slice(0, 10); }
-            getUserRank() {
-                if (!this.currentUser) return null;
-                const userIndex = this.leaderboard.scores.findIndex(entry => entry.name === this.currentUser.name);
-                return userIndex >= 0 ? userIndex + 1 : null;
-            }
-            showNamePrompt(autoSubmitAfter = false) {
-                const overlay = document.createElement('div');
-                overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100000; display: flex; align-items: center; justify-content: center; font-family: system-ui;';
-                overlay.innerHTML = '<div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #00ffff; border-radius: 15px; padding: 30px; text-align: center; max-width: 400px; width: 90%;"><h2 style="color: #00ffff; margin-bottom: 20px;">TROPHY Unete al Ranking Diario!</h2><p style="color: #fff; margin-bottom: 20px;">Elige tu nombre para competir en la clasificacion diaria</p><input type="text" id="username-input" placeholder="Tu nombre (max 15 caracteres)" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #00ffff; background: rgba(0,0,0,0.5); color: #fff; border-radius: 8px; font-size: 16px;" maxlength="15"><div style="display: flex; gap: 10px; justify-content: center;"><button id="save-name" style="background: #00ffff; color: #000; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">GUARDAR</button><button id="skip-name" style="background: #666; color: #fff; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">SALTAR</button></div></div>';
-                document.body.appendChild(overlay);
-                const input = overlay.querySelector('#username-input');
-                const saveBtn = overlay.querySelector('#save-name');
-                const skipBtn = overlay.querySelector('#skip-name');
-                input.focus();
-                saveBtn.onclick = () => {
-                    const name = input.value.trim();
-                    if (name.length >= 2) {
-                        this.setUserName(name);
-                        document.body.removeChild(overlay);
-                        if (autoSubmitAfter && this._pendingSubmission) {
-                            const { score, level, combo } = this._pendingSubmission;
-                            this._pendingSubmission = null;
-                            this.submitScore(score, level, combo);
-                        }
-                    } else {
-                        alert('El nombre debe tener al menos 2 caracteres');
-                    }
-                };
-                skipBtn.onclick = () => {
-                    if (!this.currentUser) this.setUserName('Anonimo');
-                    document.body.removeChild(overlay);
-                    if (autoSubmitAfter && this._pendingSubmission) {
-                        const { score, level, combo } = this._pendingSubmission;
-                        this._pendingSubmission = null;
-                        this.submitScore(score, level, combo);
-                    }
-                };
-                input.onkeypress = (e) => { if (e.key === 'Enter') saveBtn.click(); };
-            }
-            showRanking(scoreData) {
-                const ranking = this.getRanking();
-                const userRank = this.getUserRank();
-                const overlay = document.createElement('div');
-                overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100000; display: flex; align-items: center; justify-content: center; font-family: system-ui;';
-                let rankingHTML = '';
-                ranking.forEach((entry, index) => {
-                    const isCurrentUser = entry.name === this.currentUser.name;
-                    const medal = index === 0 ? 'GOLD' : index === 1 ? 'SILVER' : index === 2 ? 'BRONZE' : 'MEDAL';
-                    rankingHTML += '<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; margin: 4px 0; border-radius: 8px; background: ' + (isCurrentUser ? 'rgba(0,255,255,0.2)' : 'rgba(255,255,255,0.1)') + '; border: ' + (isCurrentUser ? '2px solid #00ffff' : '1px solid #333') + ';"><span style="color: #fff; font-weight: bold;">' + medal + ' #' + (index + 1) + '</span><span style="color: ' + (isCurrentUser ? '#00ffff' : '#fff') + '; font-weight: bold;">' + entry.name + '</span><span style="color: #ffff00; font-weight: bold;">' + entry.score.toLocaleString() + '</span></div>';
-                });
-                overlay.innerHTML = '<div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #00ffff; border-radius: 15px; padding: 30px; text-align: center; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;"><h2 style="color: #00ffff; margin-bottom: 20px;">TROPHY Ranking Diario - ' + this.gameName + '</h2><p style="color: #fff; margin-bottom: 20px;">Tu posicion: #' + (userRank || 'No clasificado') + '</p><div style="margin-bottom: 20px;">' + rankingHTML + '</div><div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;"><button id="close-ranking" style="background: #00ffff; color: #000; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Cerrar</button></div></div>';
-                document.body.appendChild(overlay);
-                const closeBtn = overlay.querySelector('#close-ranking');
-                closeBtn.onclick = () => document.body.removeChild(overlay);
-            }
-        }
-        window.DailyLeaderboard = DailyLeaderboard;
-        console.log('LIPA Leaderboard System loaded!');
+        // Global leaderboard system loaded from external file
+        console.log('Global leaderboard system loading...');
     </script>
     
     <!-- Google Search Console -->
@@ -1341,25 +1227,25 @@
                     }
                 }
                 
-                // 🏆 INTEGRACIÓN DEL LEADERBOARD - MOSTRAR RANKING DESPUÉS DE GAME OVER
+                // 🏆 INTEGRACIÓN DEL LEADERBOARD GLOBAL - MOSTRAR RANKING DESPUÉS DE GAME OVER
                 setTimeout(() => {
                     try {
-                        // Crear o usar leaderboard existente
+                        // Crear o usar leaderboard global existente
                         if (!window.leaderboard) {
-                            window.leaderboard = new DailyLeaderboard('neon-runner-wow');
+                            window.leaderboard = new UnifiedGlobalLeaderboard('neon-runner-wow');
                         }
                         
-                        // Enviar puntuación al leaderboard (esto mostrará el prompt de nombre si es necesario)
+                        // Enviar puntuación al leaderboard global (esto mostrará el prompt de nombre si es necesario)
                         const level = Math.floor(this.gameState.score / 1000) + 1;
                         const success = window.leaderboard.submitScore(this.gameState.score, level, this.gameState.combo);
                         
                         if (success) {
-                            console.log(`🏆 Puntuación enviada al leaderboard: ${this.gameState.score}, nivel: ${level}, combo: ${this.gameState.combo}`);
+                            console.log(`🏆 Puntuación enviada al leaderboard global: ${this.gameState.score}, nivel: ${level}, combo: ${this.gameState.combo}`);
                         } else {
                             console.log('🏆 Puntuación guardada para envío posterior');
                         }
                     } catch(e) {
-                        console.warn('Error en leaderboard:', e);
+                        console.warn('Error en leaderboard global:', e);
                     }
                 }, 1000); // Esperar 1 segundo para que se vea la pantalla de game over
                 
@@ -1488,9 +1374,9 @@
         
         function showLeaderboard(gameId) {
             try {
-                // Crear o usar leaderboard existente
+                // Crear o usar leaderboard global existente
                 if (!window.leaderboard) {
-                    window.leaderboard = new DailyLeaderboard('neon-runner-wow');
+                    window.leaderboard = new UnifiedGlobalLeaderboard('neon-runner-wow');
                 }
                 
                 // Si no hay usuario, pedir nombre primero
@@ -1513,10 +1399,10 @@
                     });
                 }
                 
-                console.log('🏆 Mostrando leaderboard del Neon Runner WOW');
+                console.log('🏆 Mostrando leaderboard global del Neon Runner WOW');
             } catch (e) { 
-                console.warn('Error al mostrar leaderboard:', e);
-                alert('Error al cargar el ranking. Inténtalo de nuevo.');
+                console.warn('Error al mostrar leaderboard global:', e);
+                alert('Error al cargar el ranking global. Inténtalo de nuevo.');
             }
         }
         
@@ -1530,14 +1416,14 @@
         window.addEventListener('load', () => {
             console.log('🚀 Initializing Neon Runner WOW...');
             
-            // 🏆 INICIALIZAR LEADERBOARD
+            // 🏆 INICIALIZAR LEADERBOARD GLOBAL
             try {
-                window.leaderboard = new DailyLeaderboard('neon-runner-wow');
-                console.log('✅ Leaderboard inicializado para Neon Runner WOW');
+                window.leaderboard = new UnifiedGlobalLeaderboard('neon-runner-wow');
+                console.log('✅ Leaderboard global inicializado para Neon Runner WOW');
                 console.log('🏆 Usuario actual:', window.leaderboard.currentUser);
-                console.log('🏆 Ranking actual:', window.leaderboard.getRanking());
+                console.log('🏆 Ranking actual:', window.leaderboard.leaderboard);
             } catch (e) {
-                console.warn('Error al inicializar leaderboard:', e);
+                console.warn('Error al inicializar leaderboard global:', e);
             }
             
             // TEST INMEDIATO DEL CANVAS
@@ -1565,12 +1451,12 @@
             // Initialize game
             game = new UltraOptimizedGame();
             
-            // Initialize leaderboard
+            // Initialize global leaderboard
             setTimeout(() => {
                 try { 
-                    window.leaderboard = new DailyLeaderboard('neon-runner-wow'); 
+                    window.leaderboard = new UnifiedGlobalLeaderboard('neon-runner-wow'); 
                 } catch(e) { 
-                    console.warn('Leaderboard init error', e); 
+                    console.warn('Global leaderboard init error', e); 
                 }
             }, 100);
             
