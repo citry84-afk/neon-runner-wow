@@ -1,5 +1,5 @@
-// 🏆 LIPA STUDIOS - DAILY LEADERBOARD SYSTEM WITH BADGES & NOTIFICATIONS
-// Sistema de clasificación diaria con badges, logros y notificaciones
+// LIPA STUDIOS - DAILY LEADERBOARD SYSTEM WITH BADGES & NOTIFICATIONS
+// Sistema de clasificacion diaria con badges, logros y notificaciones
 
 class DailyLeaderboard {
     constructor(gameName) {
@@ -22,7 +22,7 @@ class DailyLeaderboard {
         try {
             const data = JSON.parse(localStorage.getItem(this.storageKey) || '{}');
             if (data.date !== this.today) {
-                // Nuevo día - reiniciar leaderboard
+                // Nuevo dia - reiniciar leaderboard
                 return { date: this.today, scores: [] };
             }
             return data;
@@ -73,7 +73,7 @@ class DailyLeaderboard {
 
     setUserName(name) {
         this.currentUser = {
-            name: name.trim().substring(0, 15), // Máximo 15 caracteres
+            name: name.trim().substring(0, 15), // Maximo 15 caracteres
             joinDate: this.currentUser?.joinDate || new Date().toISOString(),
             totalGames: this.currentUser?.totalGames || 0,
             bestScore: this.currentUser?.bestScore || 0,
@@ -84,17 +84,17 @@ class DailyLeaderboard {
         this.saveCurrentUser();
     }
 
-    // 🏅 SISTEMA DE BADGES Y LOGROS
+    // SISTEMA DE BADGES Y LOGROS
     checkBadges(score, level, combo) {
         const newBadges = [];
         const today = this.today;
         
-        // Badges de puntuación
+        // Badges de puntuacion
         if (score >= 10000 && !this.hasBadge('high_score_10k')) {
             newBadges.push({
                 id: 'high_score_10k',
-                name: 'Puntuación Épica',
-                emoji: '🔥',
+                name: 'Puntuacion Epica',
+                emoji: 'FIRE',
                 description: 'Conseguir 10,000+ puntos',
                 date: today,
                 rarity: 'common'
@@ -105,7 +105,7 @@ class DailyLeaderboard {
             newBadges.push({
                 id: 'high_score_50k',
                 name: 'Maestro del Juego',
-                emoji: '👑',
+                emoji: 'CROWN',
                 description: 'Conseguir 50,000+ puntos',
                 date: today,
                 rarity: 'rare'
@@ -116,7 +116,7 @@ class DailyLeaderboard {
             newBadges.push({
                 id: 'high_score_100k',
                 name: 'Leyenda Viviente',
-                emoji: '🌟',
+                emoji: 'STAR',
                 description: 'Conseguir 100,000+ puntos',
                 date: today,
                 rarity: 'legendary'
@@ -128,8 +128,8 @@ class DailyLeaderboard {
             newBadges.push({
                 id: 'combo_master_20',
                 name: 'Combo Master',
-                emoji: '⚡',
-                description: 'Combo de 20x o más',
+                emoji: 'LIGHTNING',
+                description: 'Combo de 20x o mas',
                 date: today,
                 rarity: 'common'
             });
@@ -139,8 +139,8 @@ class DailyLeaderboard {
             newBadges.push({
                 id: 'combo_legend_50',
                 name: 'Combo Legendario',
-                emoji: '💥',
-                description: 'Combo de 50x o más',
+                emoji: 'EXPLOSION',
+                description: 'Combo de 50x o mas',
                 date: today,
                 rarity: 'rare'
             });
@@ -151,7 +151,7 @@ class DailyLeaderboard {
             newBadges.push({
                 id: 'level_master_10',
                 name: 'Nivel Master',
-                emoji: '🎯',
+                emoji: 'TARGET',
                 description: 'Llegar al nivel 10+',
                 date: today,
                 rarity: 'common'
@@ -162,7 +162,7 @@ class DailyLeaderboard {
             newBadges.push({
                 id: 'level_legend_25',
                 name: 'Nivel Legendario',
-                emoji: '🏆',
+                emoji: 'TROPHY',
                 description: 'Llegar al nivel 25+',
                 date: today,
                 rarity: 'rare'
@@ -190,8 +190,8 @@ class DailyLeaderboard {
                 newBadges.push({
                     id: 'streak_3',
                     name: 'Racha Diaria',
-                    emoji: '🔥',
-                    description: 'Jugar 3 días seguidos',
+                    emoji: 'FIRE',
+                    description: 'Jugar 3 dias seguidos',
                     date: today,
                     rarity: 'common'
                 });
@@ -201,8 +201,8 @@ class DailyLeaderboard {
                 newBadges.push({
                     id: 'streak_7',
                     name: 'Semana Completa',
-                    emoji: '💪',
-                    description: 'Jugar 7 días seguidos',
+                    emoji: 'MUSCLE',
+                    description: 'Jugar 7 dias seguidos',
                     date: today,
                     rarity: 'rare'
                 });
@@ -212,8 +212,8 @@ class DailyLeaderboard {
                 newBadges.push({
                     id: 'streak_30',
                     name: 'Mes Completo',
-                    emoji: '🏅',
-                    description: 'Jugar 30 días seguidos',
+                    emoji: 'MEDAL',
+                    description: 'Jugar 30 dias seguidos',
                     date: today,
                     rarity: 'legendary'
                 });
@@ -224,8 +224,8 @@ class DailyLeaderboard {
                 newBadges.push({
                     id: 'daily_games_5',
                     name: 'Jugador Activo',
-                    emoji: '🎮',
-                    description: 'Jugar 5+ partidas en un día',
+                    emoji: 'GAME',
+                    description: 'Jugar 5+ partidas en un dia',
                     date: today,
                     rarity: 'common'
                 });
@@ -235,8 +235,8 @@ class DailyLeaderboard {
                 newBadges.push({
                     id: 'daily_games_10',
                     name: 'Adicto al Juego',
-                    emoji: '🎯',
-                    description: 'Jugar 10+ partidas en un día',
+                    emoji: 'TARGET',
+                    description: 'Jugar 10+ partidas en un dia',
                     date: today,
                     rarity: 'rare'
                 });
@@ -248,8 +248,8 @@ class DailyLeaderboard {
         if (userRank === 1 && !this.hasBadge('first_place')) {
             newBadges.push({
                 id: 'first_place',
-                name: 'Campeón del Día',
-                emoji: '🥇',
+                name: 'Campeon del Dia',
+                emoji: 'GOLD',
                 description: 'Ser #1 en el ranking diario',
                 date: today,
                 rarity: 'legendary'
@@ -260,7 +260,7 @@ class DailyLeaderboard {
             newBadges.push({
                 id: 'top_3',
                 name: 'Podio',
-                emoji: '🏆',
+                emoji: 'TROPHY',
                 description: 'Estar en el top 3 del ranking',
                 date: today,
                 rarity: 'rare'
@@ -271,17 +271,17 @@ class DailyLeaderboard {
             newBadges.push({
                 id: 'top_10',
                 name: 'Top 10',
-                emoji: '⭐',
+                emoji: 'STAR',
                 description: 'Estar en el top 10 del ranking',
                 date: today,
                 rarity: 'common'
             });
         }
         
-        // Añadir nuevos badges
+        // Anadir nuevos badges
         newBadges.forEach(badge => {
             this.badges.push(badge);
-            this.showNotification(`¡Nuevo Badge Desbloqueado! ${badge.emoji} ${badge.name}`, 'badge');
+            this.showNotification(`Nuevo Badge Desbloqueado! ${badge.emoji} ${badge.name}`, 'badge');
         });
         
         if (newBadges.length > 0) {
@@ -305,7 +305,7 @@ class DailyLeaderboard {
             .slice(0, limit);
     }
 
-    // 🔔 SISTEMA DE NOTIFICACIONES
+    // SISTEMA DE NOTIFICACIONES
     showNotification(message, type = 'info', duration = 3000) {
         const notification = {
             id: Date.now(),
@@ -330,7 +330,7 @@ class DailyLeaderboard {
         
         notificationEl.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 20px;">${type === 'badge' ? '🏅' : type === 'achievement' ? '🎉' : '📢'}</span>
+                <span style="font-size: 20px;">${type === 'badge' ? 'MEDAL' : type === 'achievement' ? 'PARTY' : 'INFO'}</span>
                 <span>${message}</span>
             </div>
         `;
@@ -355,7 +355,7 @@ class DailyLeaderboard {
 
     submitScore(score, level = 1, combo = 0) {
         if (!this.currentUser) {
-            // Guardar envío pendiente y pedir nombre
+            // Guardar envio pendiente y pedir nombre
             this._pendingSubmission = { score, level, combo };
             this.showNamePrompt(true);
             return false;
@@ -370,7 +370,7 @@ class DailyLeaderboard {
             game: this.gameName
         };
 
-        // Añadir score al leaderboard
+        // Anadir score al leaderboard
         this.leaderboard.scores.push(scoreData);
         
         // Ordenar por score descendente
@@ -385,17 +385,17 @@ class DailyLeaderboard {
         this.currentUser.totalGames++;
         if (score > this.currentUser.bestScore) {
             this.currentUser.bestScore = score;
-            this.showNotification(`¡Nuevo récord personal! ${score.toLocaleString()} puntos`, 'achievement');
+            this.showNotification(`Nuevo record personal! ${score.toLocaleString()} puntos`, 'achievement');
         }
         this.saveCurrentUser();
 
         // Verificar badges
         const newBadges = this.checkBadges(score, level, combo);
         
-        // Notificación de ranking
+        // Notificacion de ranking
         const userRank = this.getUserRank();
         if (userRank <= 3) {
-            this.showNotification(`¡Estás en el #${userRank} del ranking!`, 'achievement');
+            this.showNotification(`Estas en el #${userRank} del ranking!`, 'achievement');
         }
 
         // Mostrar ranking
@@ -430,9 +430,9 @@ class DailyLeaderboard {
             <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); 
                         border: 2px solid #00ffff; border-radius: 15px; padding: 30px; 
                         text-align: center; max-width: 400px; width: 90%;">
-                <h2 style="color: #00ffff; margin-bottom: 20px;">🏆 ¡Únete al Ranking Diario!</h2>
-                <p style="color: #fff; margin-bottom: 20px;">Elige tu nombre para competir en la clasificación diaria</p>
-                <input type="text" id="username-input" placeholder="Tu nombre (máx 15 caracteres)" 
+                <h2 style="color: #00ffff; margin-bottom: 20px;">TROPHY Unete al Ranking Diario!</h2>
+                <p style="color: #fff; margin-bottom: 20px;">Elige tu nombre para competir en la clasificacion diaria</p>
+                <input type="text" id="username-input" placeholder="Tu nombre (max 15 caracteres)" 
                        style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #00ffff; 
                               background: rgba(0,0,0,0.5); color: #fff; border-radius: 8px; font-size: 16px;"
                        maxlength="15">
@@ -458,7 +458,7 @@ class DailyLeaderboard {
             if (name.length >= 2) {
                 this.setUserName(name);
                 document.body.removeChild(overlay);
-                // Si hay envío pendiente, publicarlo ahora
+                // Si hay envio pendiente, publicarlo ahora
                 if (autoSubmitAfter && this._pendingSubmission) {
                     const { score, level, combo } = this._pendingSubmission;
                     this._pendingSubmission = null;
@@ -472,7 +472,7 @@ class DailyLeaderboard {
         skipBtn.onclick = () => {
             // Asignar un nombre temporal si el usuario decide saltar
             if (!this.currentUser) {
-                this.setUserName('Anónimo');
+                this.setUserName('Anonimo');
             }
             document.body.removeChild(overlay);
             if (autoSubmitAfter && this._pendingSubmission) {
@@ -502,7 +502,7 @@ class DailyLeaderboard {
         let rankingHTML = '';
         ranking.forEach((entry, index) => {
             const isCurrentUser = entry.name === this.currentUser.name;
-            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+            const medal = index === 0 ? 'GOLD' : index === 1 ? 'SILVER' : index === 2 ? 'BRONZE' : 'MEDAL';
             const rankClass = isCurrentUser ? 'current-user' : '';
             
             rankingHTML += `
@@ -524,7 +524,7 @@ class DailyLeaderboard {
         if (recentBadges.length > 0) {
             badgesHTML = `
                 <div style="margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px;">
-                    <h3 style="color: #FFD700; margin-bottom: 10px;">🏅 Badges Recientes</h3>
+                    <h3 style="color: #FFD700; margin-bottom: 10px;">MEDAL Badges Recientes</h3>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         ${recentBadges.map(badge => `
                             <span style="background: ${badge.rarity === 'legendary' ? '#FFD700' : badge.rarity === 'rare' ? '#FF6B6B' : '#4ECDC4'}; 
@@ -541,8 +541,8 @@ class DailyLeaderboard {
             <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); 
                         border: 2px solid #00ffff; border-radius: 15px; padding: 30px; 
                         text-align: center; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <h2 style="color: #00ffff; margin-bottom: 20px;">🏆 Ranking Diario - ${this.gameName}</h2>
-                <p style="color: #fff; margin-bottom: 20px;">Tu posición: #${userRank || 'No clasificado'}</p>
+                <h2 style="color: #00ffff; margin-bottom: 20px;">TROPHY Ranking Diario - ${this.gameName}</h2>
+                <p style="color: #fff; margin-bottom: 20px;">Tu posicion: #${userRank || 'No clasificado'}</p>
                 
                 ${badgesHTML}
                 
@@ -552,9 +552,9 @@ class DailyLeaderboard {
                 
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                     <button id="share-ranking" style="background: #1da1f2; color: #fff; padding: 10px 20px; 
-                            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">📱 Compartir</button>
+                            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">SHARE Compartir</button>
                     <button id="show-badges" style="background: #FFD700; color: #000; padding: 10px 20px; 
-                            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">🏅 Mis Badges</button>
+                            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">MEDAL Mis Badges</button>
                     <button id="close-ranking" style="background: #00ffff; color: #000; padding: 10px 20px; 
                             border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Cerrar</button>
                 </div>
@@ -635,10 +635,10 @@ class DailyLeaderboard {
             <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); 
                         border: 2px solid #FFD700; border-radius: 15px; padding: 30px; 
                         text-align: center; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <h2 style="color: #FFD700; margin-bottom: 20px;">🏅 Mis Badges y Logros</h2>
+                <h2 style="color: #FFD700; margin-bottom: 20px;">MEDAL Mis Badges y Logros</h2>
                 <p style="color: #fff; margin-bottom: 20px;">Total: ${this.badges.length} badges desbloqueados</p>
                 
-                ${badgesHTML || '<p style="color: #ccc;">Aún no tienes badges. ¡Sigue jugando para desbloquearlos!</p>'}
+                ${badgesHTML || '<p style="color: #ccc;">Aun no tienes badges. Sigue jugando para desbloquearlos!</p>'}
                 
                 <button id="close-badges" style="background: #FFD700; color: #000; padding: 12px 24px; 
                         border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px;">Cerrar</button>
@@ -668,11 +668,11 @@ class DailyLeaderboard {
         const rankText = userRank ? `#${userRank}` : 'No clasificado';
         const badgesCount = this.badges.length;
         
-        const shareText = `🏆 ¡He conseguido ${scoreData.score.toLocaleString()} puntos en ${gameName}! 
-Posición en el ranking diario: ${rankText}
-🏅 Badges desbloqueados: ${badgesCount}
+        const shareText = `TROPHY He conseguido ${scoreData.score.toLocaleString()} puntos en ${gameName}! 
+Posicion en el ranking diario: ${rankText}
+MEDAL Badges desbloqueados: ${badgesCount}
 
-¿Puedes superarme? Juega gratis en: https://lipastudios.com
+Puedes superarme? Juega gratis en: https://lipastudios.com
 
 #LIPAStudios #JuegosNeon #Gaming`;
 
@@ -686,7 +686,7 @@ Posición en el ranking diario: ${rankText}
         } else {
             // Fallback - copiar al clipboard
             navigator.clipboard.writeText(shareText).then(() => {
-                alert('¡Texto copiado! Pégalo en tus redes sociales');
+                alert('Texto copiado! Pegalo en tus redes sociales');
             }).catch(() => {
                 // Fallback manual
                 const textArea = document.createElement('textarea');
@@ -695,7 +695,7 @@ Posición en el ranking diario: ${rankText}
                 textArea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
-                alert('¡Texto copiado! Pégalo en tus redes sociales');
+                alert('Texto copiado! Pegalo en tus redes sociales');
             });
         }
     }
@@ -717,26 +717,26 @@ Posición en el ranking diario: ${rankText}
     }
 }
 
-// 🎮 INTEGRACIÓN CON JUEGOS
+// INTEGRACION CON JUEGOS
 window.LipaLeaderboard = DailyLeaderboard;
 window.DailyLeaderboard = DailyLeaderboard;
 
-// Función helper para integrar fácilmente
+// Funcion helper para integrar facilmente
 window.initLeaderboard = function(gameName) {
     return new DailyLeaderboard(gameName);
 };
 
-// Función para mostrar ranking desde cualquier parte
+// Funcion para mostrar ranking desde cualquier parte
 window.showLeaderboard = function(gameName) {
     const lb = new DailyLeaderboard(gameName);
     const ranking = lb.getRanking();
     const userRank = lb.getUserRank();
-    // Si no hay usuario aún, pedir nombre (opcional)
+    // Si no hay usuario aun, pedir nombre (opcional)
     if (!lb.currentUser) {
         lb.showNamePrompt(false);
     }
-    // Mostrar ranking aunque esté vacío (invita a ser el primero)
-    lb.showRanking({ name: lb.currentUser?.name || 'Anónimo', score: 0 });
+    // Mostrar ranking aunque este vacio (invita a ser el primero)
+    lb.showRanking({ name: lb.currentUser?.name || 'Anonimo', score: 0 });
 };
 
-console.log('🏆 LIPA Leaderboard System with Badges & Notifications loaded!');
+console.log('LIPA Leaderboard System with Badges & Notifications loaded!');
