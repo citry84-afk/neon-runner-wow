@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stack Tower WOW | LIPA Studios</title>
+  <meta name="description" content="Stack Tower WOW: apila bloques con precisión, ritmo y reflejos. Descubre modos de juego, consejos y ranking global.">
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#000,#111);color:#e8f6ff}
+    header,footer{background:rgba(0,0,0,.85);border-bottom:2px solid #00ffff}
+    nav{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;gap:16px;align-items:center}
+    nav a{color:#e8f6ff;text-decoration:none}
+    nav a.brand{color:#00ffff;font-weight:800}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px}
+    h1{color:#00ffff}
+    .btn{display:inline-block;background:#00ffff;color:#000;padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .card{background:rgba(0,0,0,.4);border:1px solid #00ffff;border-radius:12px;padding:16px}
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="brand" href="/">LIPA Studios</a>
+      <a href="/">Inicio</a>
+      <a href="/games.html">Juegos</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contacto</a>
+      <span style="flex:1 1 auto"></span>
+      <a href="/privacy.html">Privacidad</a>
+      <a href="/terms.html">Términos</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <h1>Stack Tower WOW</h1>
+    <p>
+      Stack Tower WOW es un arcade de precisión donde tu misión es construir una torre
+      perfecta apilando plataformas al ritmo correcto. Cada bloque que cae ligeramente
+      desalineado se recorta, reduciendo el área útil y aumentando la dificultad de forma
+      progresiva. El resultado es una experiencia rápida, hipnótica y muy adictiva,
+      ideal para partidas cortas en móvil con una sensación táctil impecable.
+    </p>
+    <p>
+      Nuestro motor ultra fluido prioriza los 60+ FPS y la latencia mínima de entrada.
+      Los controles son sencillos: un toque para detener el bloque. Sin embargo, alcanzar
+      rachas largas requiere aprendizaje: anticipa el movimiento, memoriza el tempo y
+      utiliza referencias visuales de los bordes neon para cuadrar las últimas piezas.
+      A medida que la torre crece, el scroll y los efectos de partículas realzan la
+      tensión del último bloque.
+    </p>
+    <p>
+      El juego integra ranking global diario con sincronización en la nube (JSONBin) y
+      sistema de usuario unificado de LIPA Studios. Tus mejores marcas se guardan por
+      dispositivo y nombre, y puedes consultar el top del día y el histórico por juegos.
+      Si juegas desde distintos móviles, verás las mismas puntuaciones sin necesidad de
+      registro.
+    </p>
+    <div class="grid">
+      <section class="card">
+        <h2 style="color:#00ffff;margin:0 0 8px">Cómo jugar</h2>
+        <ul>
+          <li>Toca para detener el bloque justo sobre la base.</li>
+          <li>Si te desplazas, el sobrante se recorta y la base se hace más pequeña.</li>
+          <li>Mantén el ritmo y usa los bordes luminosos como guía.</li>
+          <li>Cuanto más alto llegues, mayor será tu puntuación.</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h2 style="color:#00ffff;margin:0 0 8px">Consejos</h2>
+        <ul>
+          <li>Fija la vista en el borde de referencia, no en el bloque entero.</li>
+          <li>Busca tu tempo: pulsaciones regulares generan menos error.</li>
+          <li>En rachas altas, acepta micro-ajustes: es mejor cortar poco que mucho.</li>
+          <li>Juega en vertical para maximizar el campo de visión.</li>
+        </ul>
+      </section>
+    </div>
+    <p style="margin-top:8px">
+      <a class="btn" href="https://stacktowerwow.netlify.app/" target="_blank" rel="noopener">Jugar ahora</a>
+      <a class="btn" href="/games.html" style="margin-left:8px">Más juegos</a>
+    </p>
+  </main>
+  <footer style="border-top:2px solid #00ffff;text-align:center;padding:16px">
+    © <span id="year"></span> LIPA Studios · <a href="/privacy.html" style="color:#00ffff">Privacidad</a> · <a href="/terms.html" style="color:#00ffff">Términos</a>
+  </footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</body>
+</html>
+
+

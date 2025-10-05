@@ -2,20 +2,68 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://runnerwow.netlify.app/</loc>
-    <lastmod>2024-09-25T12:00:00+00:00</lastmod>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
     <priority>1.00</priority>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://runnerwow.netlify.app/privacy.html</loc>
-    <lastmod>2024-09-25T12:00:00+00:00</lastmod>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
     <priority>0.30</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://runnerwow.netlify.app/terms.html</loc>
-    <lastmod>2024-09-25T12:00:00+00:00</lastmod>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
     <priority>0.30</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://runnerwow.netlify.app/games.html</loc>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
+    <priority>0.80</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://runnerwow.netlify.app/stack-tower.html</loc>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
+    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://runnerwow.netlify.app/neon-beat.html</loc>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
+    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://runnerwow.netlify.app/neon-runner-wow-game.html</loc>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
+    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://runnerwow.netlify.app/stack-tower-wow.html</loc>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
+    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://runnerwow.netlify.app/neon-beat-wow.html</loc>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
+    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://runnerwow.netlify.app/neon-runner.html</loc>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
+    <priority>0.64</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://runnerwow.netlify.app/neon-lab-physics-wow.html</loc>
+    <lastmod>2025-10-05T12:00:00+00:00</lastmod>
+    <priority>0.64</priority>
     <changefreq>monthly</changefreq>
   </url>
 </urlset>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juegos | LIPA Studios</title>
+  <meta name="description" content="Catálogo de juegos de LIPA Studios: Neon Runner WOW, Stack Tower WOW, Neon Beat WOW, Neon Lab Physics.">
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#000,#111);color:#e8f6ff}
+    header,footer{background:rgba(0,0,0,.85);border-bottom:2px solid #00ffff}
+    nav{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;gap:16px;align-items:center}
+    nav a{color:#e8f6ff;text-decoration:none}
+    nav a.brand{color:#00ffff;font-weight:800}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+    .card{background:rgba(0,0,0,.4);border:1px solid #00ffff;border-radius:12px;padding:16px}
+    .card h3{color:#00ffff;margin:8px 0}
+    .btn{display:inline-block;background:#00ffff;color:#000;padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="brand" href="/">LIPA Studios</a>
+      <a href="/">Inicio</a>
+      <a href="/games.html">Juegos</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contacto</a>
+      <span style="flex:1 1 auto"></span>
+      <a href="/privacy.html">Privacidad</a>
+      <a href="/terms.html">Términos</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <h1 style="color:#00ffff">Catálogo de Juegos</h1>
+    <p>Juegos ultra fluidos hechos con cariño por LIPA Studios. Elige tu favorito y ¡a jugar!</p>
+    <section class="grid" aria-label="lista de juegos">
+      <article class="card">
+        <h3>Neon Runner WOW</h3>
+        <p>Endless runner de alta velocidad, 60+ FPS, efectos neon y combos espectaculares. Optimizado para móvil.</p>
+        <a class="btn" href="/">Jugar ahora</a>
+        <a class="btn" href="/neon-runner-wow-game.html" style="margin-left:8px">Más info</a>
+      </article>
+      <article class="card">
+        <h3>Stack Tower WOW</h3>
+        <p>Apila bloques con precisión milimétrica. Ritmo, reflejos y una experiencia visual brillante.</p>
+        <a class="btn" href="/stack-tower-wow.html">Más info</a>
+      </article>
+      <article class="card">
+        <h3>Stack Tower</h3>
+        <p>La edición clásica para dominar el ritmo y la precisión antes de WOW.</p>
+        <a class="btn" href="/stack-tower.html">Más info</a>
+      </article>
+      <article class="card">
+        <h3>Neon Beat WOW</h3>
+        <p>Arcade musical con pulsos de luz. Supera retos al ritmo de la música con estética futurista.</p>
+        <a class="btn" href="/neon-beat-wow.html">Más info</a>
+      </article>
+      <article class="card">
+        <h3>Neon Beat</h3>
+        <p>Versión base del juego musical neon para entrenar timing perfecto.</p>
+        <a class="btn" href="/neon-beat.html">Más info</a>
+      </article>
+      <article class="card">
+        <h3>Neon Lab Physics</h3>
+        <p>Experimentos de física en laboratorio neon. Resuelve puzzles jugando con fuerzas y colisiones.</p>
+        <a class="btn" href="/neon-lab-physics-wow.html">Más info</a>
+      </article>
+      <article class="card">
+        <h3>Neon Runner</h3>
+        <p>Versión clásica del runner neon. Saltos, velocidad progresiva y ranking diario.</p>
+        <a class="btn" href="/neon-runner.html">Más info</a>
+      </article>
+      <article class="card">
+        <h3>Neon Runner</h3>
+        <p>Versión clásica del runner neon. Saltos, velocidad progresiva y ranking diario.</p>
+        <a class="btn" href="/neon-runner.html">Más info</a>
+      </article>
+    </section>
+  </main>
+  <footer style="border-top:2px solid #00ffff;text-align:center;padding:16px">
+    © <span id="year"></span> LIPA Studios · <a href="/privacy.html" style="color:#00ffff">Privacidad</a> · <a href="/terms.html" style="color:#00ffff">Términos</a>
+  </footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</body>
+</html>
+

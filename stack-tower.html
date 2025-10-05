@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stack Tower | LIPA Studios</title>
+  <meta name="description" content="Stack Tower: versión clásica del apilador. Mecánicas, consejos, enlaces y ranking global.">
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#000,#111);color:#e8f6ff}
+    header,footer{background:rgba(0,0,0,.85);border-bottom:2px solid #00ffff}
+    nav{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;gap:16px;align-items:center}
+    nav a{color:#e8f6ff;text-decoration:none}
+    nav a.brand{color:#00ffff;font-weight:800}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px}
+    h1{color:#00ffff}
+    .btn{display:inline-block;background:#00ffff;color:#000;padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .card{background:rgba(0,0,0,.4);border:1px solid #00ffff;border-radius:12px;padding:16px}
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="brand" href="/">LIPA Studios</a>
+      <a href="/">Inicio</a>
+      <a href="/games.html">Juegos</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contacto</a>
+      <span style="flex:1 1 auto"></span>
+      <a href="/privacy.html">Privacidad</a>
+      <a href="/terms.html">Términos</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <h1>Stack Tower</h1>
+    <p>
+      La edición clásica de nuestro apilador minimalista. Un solo toque para detener
+      cada bloque y mantener la torre estable el máximo tiempo posible. Ideal para
+      aprender las bases antes de saltar a la versión WOW.
+    </p>
+    <div class="grid">
+      <section class="card">
+        <h2 style="color:#00ffff;margin:0 0 8px">Objetivo</h2>
+        <ul>
+          <li>Apila con precisión y evita recortes grandes.</li>
+          <li>Mejora tu pulso y ritmo visual.</li>
+          <li>Escala el ranking diario global.</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h2 style="color:#00ffff;margin:0 0 8px">Jugar</h2>
+        <p>
+          Prueba también la versión avanzada: <a href="/stack-tower-wow.html" style="color:#00ffff">Stack Tower WOW</a>.
+        </p>
+      </section>
+    </div>
+    <p style="margin-top:8px">
+      <a class="btn" href="https://stacktowerclassic.netlify.app/" target="_blank" rel="noopener">Jugar ahora</a>
+      <a class="btn" href="/games.html" style="margin-left:8px">Más juegos</a>
+    </p>
+  </main>
+  <footer style="border-top:2px solid #00ffff;text-align:center;padding:16px">
+    © <span id="year"></span> LIPA Studios · <a href="/privacy.html" style="color:#00ffff">Privacidad</a> · <a href="/terms.html" style="color:#00ffff">Términos</a>
+  </footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</body>
+</html>
+
+

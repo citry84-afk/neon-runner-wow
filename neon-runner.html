@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Runner | LIPA Studios</title>
+  <meta name="description" content="Neon Runner: versión clásica del runner neon. Guía, trucos, mecánicas y ranking.">
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#000,#111);color:#e8f6ff}
+    header,footer{background:rgba(0,0,0,.85);border-bottom:2px solid #00ffff}
+    nav{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;gap:16px;align-items:center}
+    nav a{color:#e8f6ff;text-decoration:none}
+    nav a.brand{color:#00ffff;font-weight:800}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px}
+    h1{color:#00ffff}
+    .btn{display:inline-block;background:#00ffff;color:#000;padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .card{background:rgba(0,0,0,.4);border:1px solid #00ffff;border-radius:12px;padding:16px}
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="brand" href="/">LIPA Studios</a>
+      <a href="/">Inicio</a>
+      <a href="/games.html">Juegos</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contacto</a>
+      <span style="flex:1 1 auto"></span>
+      <a href="/privacy.html">Privacidad</a>
+      <a href="/terms.html">Términos</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <h1>Neon Runner</h1>
+    <p>
+      Neon Runner es la base del universo WOW: un endless runner con controles simples y
+      sensación de velocidad impecable. Salta obstáculos, recoge gemas y escala el ranking
+      diario. Perfecto para partidas rápidas con respuesta táctil instantánea.
+    </p>
+    <div class="grid">
+      <section class="card">
+        <h2 style="color:#00ffff;margin:0 0 8px">Mecánicas principales</h2>
+        <ul>
+          <li>Salto con un toque; dash aéreo en ventana limitada.</li>
+          <li>Velocidad progresiva y generación procedural de obstáculos.</li>
+          <li>Multiplicador por combo y power-ups contextuales.</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h2 style="color:#00ffff;margin:0 0 8px">Optimización móvil</h2>
+        <ul>
+          <li>60+ FPS con reducción adaptativa de partículas.</li>
+          <li>Gestos táctiles y layout full screen.</li>
+          <li>Baja latencia de entrada y física estable.</li>
+        </ul>
+      </section>
+    </div>
+    <p style="margin-top:8px">
+      <a class="btn" href="https://neonrunnergame.netlify.app/" target="_blank" rel="noopener">Jugar ahora</a>
+      <a class="btn" href="/games.html" style="margin-left:8px">Más juegos</a>
+    </p>
+  </main>
+  <footer style="border-top:2px solid #00ffff;text-align:center;padding:16px">
+    © <span id="year"></span> LIPA Studios · <a href="/privacy.html" style="color:#00ffff">Privacidad</a> · <a href="/terms.html" style="color:#00ffff">Términos</a>
+  </footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</body>
+</html>
+
+
